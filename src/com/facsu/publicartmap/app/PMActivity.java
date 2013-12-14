@@ -1,11 +1,12 @@
 package com.facsu.publicartmap.app;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
 
+import com.dennytech.common.app.BDActivity;
 import com.facsu.publicartmap.R;
 
 /**
@@ -14,7 +15,9 @@ import com.facsu.publicartmap.R;
  * @author dengjun86
  * 
  */
-public class PMActivity extends FragmentActivity {
+public class PMActivity extends BDActivity {
+	
+	private TextView titleTv;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -28,6 +31,7 @@ public class PMActivity extends FragmentActivity {
 		if (customTitleType() == Window.FEATURE_CUSTOM_TITLE) {
 			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 					R.layout.custom_title);
+			titleTv = (TextView) findViewById(R.id.title);
 		}
 	}
 
@@ -38,6 +42,7 @@ public class PMActivity extends FragmentActivity {
 		if (customTitleType() == Window.FEATURE_CUSTOM_TITLE) {
 			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 					R.layout.custom_title);
+			titleTv = (TextView) findViewById(R.id.title);
 		}
 	}
 
@@ -48,6 +53,7 @@ public class PMActivity extends FragmentActivity {
 		if (customTitleType() == Window.FEATURE_CUSTOM_TITLE) {
 			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 					R.layout.custom_title);
+			titleTv = (TextView) findViewById(R.id.title);
 		}
 	}
 
@@ -58,6 +64,12 @@ public class PMActivity extends FragmentActivity {
 	 */
 	protected int customTitleType() {
 		return Window.FEATURE_CUSTOM_TITLE;
+	}
+	
+	@Override
+	public void setTitle(CharSequence title) {
+		super.setTitle(title);
+		titleTv.setText(title.toString());
 	}
 
 }

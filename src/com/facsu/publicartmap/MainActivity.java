@@ -4,20 +4,22 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.facsu.publicartmap.app.PMTabActivity;
+import com.facsu.publicartmap.barcode.BarcodeFragment;
 import com.facsu.publicartmap.explore.ExploreFragment;
+import com.facsu.publicartmap.me.MeFragment;
 
 public class MainActivity extends PMTabActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
 				R.drawable.tab_explore), ExploreFragment.class);
 		addTab(setIndicatorImage(tabHost.newTabSpec("barcode"),
-				R.drawable.tab_barcode), ExploreFragment.class);
+				R.drawable.tab_barcode), BarcodeFragment.class);
 		addTab(setIndicatorImage(tabHost.newTabSpec("me"), R.drawable.tab_me),
-				ExploreFragment.class);
+				MeFragment.class);
 	}
 
 	@Override
