@@ -41,8 +41,8 @@ public class PMFragment extends BDFragment {
 		titleBar.setRightButton(resId, listener);
 	}
 
-	public void setBackButtonEnable(boolean enable) {
-		titleBar.setBackButtonEnable(enable);
+	public void enableBackButton(boolean enable) {
+		titleBar.enableBackButton(enable);
 	}
 
 	public void setTitle(int resId) {

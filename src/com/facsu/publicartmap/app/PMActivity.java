@@ -56,7 +56,7 @@ public class PMActivity extends BDActivity {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.custom_title);
 		titleBar = (TitleBar) findViewById(R.id.titlebar);
-		setBackButtonEnable(true);
+		enableBackButton(true);
 	}
 
 	/**
@@ -82,8 +82,8 @@ public class PMActivity extends BDActivity {
 		titleBar.setRightButton(resId, listener);
 	}
 
-	public void setBackButtonEnable(boolean enable) {
-		titleBar.setBackButtonEnable(enable);
+	public void enableBackButton(boolean enable) {
+		titleBar.enableBackButton(enable);
 	}
 
 }

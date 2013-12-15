@@ -43,7 +43,7 @@ public class TitleBar extends FrameLayout implements
 	public void setLeftButton(int resId, OnClickListener listener) {
 		leftBtn.setImageResource(resId);
 		leftBtn.setOnClickListener(listener);
-		setBackButtonEnable(false);
+		enableBackButton(false);
 	}
 
 	public void setRightButton(int resId, OnClickListener listener) {
@@ -51,7 +51,7 @@ public class TitleBar extends FrameLayout implements
 		rightBtn.setOnClickListener(listener);
 	}
 
-	public void setBackButtonEnable(boolean enable) {
+	public void enableBackButton(boolean enable) {
 		if (enable) {
 			backBtn.setVisibility(View.VISIBLE);
 			leftBtn.setVisibility(View.GONE);

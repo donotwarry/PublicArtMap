@@ -51,6 +51,7 @@ public class ArtworkInfoActivity extends PMActivity implements
 		commentNumTv = (TextView) findViewById(R.id.artworkinfo_comment_num);
 		introTv = (TextView) findViewById(R.id.artworkinfo_intro);
 		locTv = (TextView) findViewById(R.id.artworkinfo_location);
+		locTv.setOnClickListener(this);
 		findViewById(R.id.artworkinfo_comment_add).setOnClickListener(this);
 		imgPager.setOnClickListener(this);
 
@@ -76,9 +77,13 @@ public class ArtworkInfoActivity extends PMActivity implements
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.artworkinfo_comment_add) {
+			// TODO
 
 		} else if (v.getId() == R.id.artworkinfo_pager) {
+			// TODO
 
+		} else if (v.getId() == R.id.artworkinfo_location) {
+			// TODO
 		}
 	}
 
