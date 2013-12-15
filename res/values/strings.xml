@@ -12,6 +12,12 @@
     <string name="lab_km">公里</string>
     <string name="lab_10km">万公里</string>
     
+    <!-- artworkinfo -->
+    <string name="artwork_name">作品名称：</string>
+    <string name="artwork_author">艺术家：</string>
+    <string name="artwork_time">时间：</string>
+    <string name="artwork_intro">作品介绍：</string>
+    
     <!-- barcode -->
     <string name="title_barcode">扫一扫</string>
     

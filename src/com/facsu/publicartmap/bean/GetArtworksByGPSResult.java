@@ -1,10 +1,11 @@
 package com.facsu.publicartmap.bean;
 
-public class GetArtworksByGPSResult {
-	
+public class GetArtworksByGPSResult implements Result {
+
 	public Artwork[] GetArtworksByGPSResult;
 
-	public Artwork[] list() {
+	@Override
+	public Artwork[] result() {
 		return GetArtworksByGPSResult;
 	}
 }

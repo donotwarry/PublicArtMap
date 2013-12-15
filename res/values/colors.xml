@@ -3,4 +3,8 @@
     
     <color name="tab_main_bg">#0c0c0d</color>
     <color name="title_bg">#ef5d4a</color>
+    
+    <color name="green">#00CD00</color>
+    <color name="red">#EE4000</color>
+    <color name="gray">#EBEBEB</color>
 </resources>

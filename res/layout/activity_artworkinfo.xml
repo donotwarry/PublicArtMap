@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp" >
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/artworkinfo_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/artworkinfo_page_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_page_left" />
+
+        <ProgressBar
+            android:id="@+id/artworkinfo_images_loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/artworkinfo_page_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_page_right" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/artworkinfo_vote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ic_vote_num"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="1"
+            android:textColor="@color/green"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/artworkinfo_comment_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_comment_num"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="0"
+            android:textColor="@color/red"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/artworkinfo_intro"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:editable="false"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/ic_text_bg"
+        android:padding="5dp"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/artworkinfo_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/ic_location_bg"
+        android:drawableRight="@drawable/ic_arrow_r"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:paddingLeft="60dp"
+        android:paddingRight="10dp"
+        android:singleLine="true"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/artworkinfo_comment_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_comment" />
+
+</LinearLayout>

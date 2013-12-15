@@ -1,7 +1,9 @@
 package com.facsu.publicartmap.explore;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.map.MyLocationOverlay.LocationMode;
 import com.baidu.mapapi.map.OverlayItem;
+import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.dennytech.common.service.dataservice.mapi.CacheType;
@@ -53,6 +56,7 @@ public class ExploreFragment extends PMMapFragment implements
 
 	private MApiRequest request;
 	private Artwork[] data;
+	private int curArtworkIndex;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +80,20 @@ public class ExploreFragment extends PMMapFragment implements
 		mapView().setBuiltInZoomControls(true);
 		mapView().regMapViewListener(mapManager(), this);
 
-		pop = new PopupOverlay(mapView(), null);
+		PopupClickListener popListener = new PopupClickListener() {
+
+			@Override
+			public void onClickedPopup(int index) {
+				if (curArtworkIndex < 0) {
+					return;
+				}
+				Artwork aw = data[curArtworkIndex];
+				startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse("pam://artworkinfo?id=" + aw.ArtworkID)));
+			}
+
+		};
+		pop = new PopupOverlay(mapView(), popListener);
 		popView = (PopupView) getActivity().getLayoutInflater().inflate(
 				R.layout.layout_pop, null);
 
@@ -109,6 +126,14 @@ public class ExploreFragment extends PMMapFragment implements
 	public void onResume() {
 		super.onResume();
 		setTitle(R.string.title_explore);
+	}
+
+	@Override
+	public void onDestroy() {
+		if (request != null) {
+			mapiService().abort(request, this, true);
+		}
+		super.onDestroy();
 	}
 
 	@Override
@@ -150,7 +175,7 @@ public class ExploreFragment extends PMMapFragment implements
 		} else {
 			resultOverlay.removeAll();
 		}
-		
+
 		for (Artwork artwork : data) {
 			GeoPoint gp = new GeoPoint(
 					(int) (Double.valueOf(artwork.Latitude) * 1E6),
@@ -234,9 +259,9 @@ public class ExploreFragment extends PMMapFragment implements
 		if (resp.result() instanceof GetArtworksByGPSResult) {
 			GetArtworksByGPSResult result = (GetArtworksByGPSResult) resp
 					.result();
-			data = result.list();
+			data = result.result();
 			showData();
-			Toast.makeText(getActivity(), "success " + result.list().length,
+			Toast.makeText(getActivity(), "success " + result.result().length,
 					Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -258,6 +283,7 @@ public class ExploreFragment extends PMMapFragment implements
 		@Override
 		public boolean onTap(int index) {
 			Artwork aw = data[index];
+			curArtworkIndex = index;
 			popView.setData(aw, locData);
 			GeoPoint pt = new GeoPoint(
 					(int) (Double.valueOf(aw.Latitude) * 1E6),
@@ -272,6 +298,7 @@ public class ExploreFragment extends PMMapFragment implements
 			if (pop != null) {
 				pop.hidePop();
 				mapView().removeView(popView);
+				curArtworkIndex = -1;
 			}
 			return false;
 		}
