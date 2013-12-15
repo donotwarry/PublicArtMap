@@ -4,10 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
 
 import com.dennytech.common.app.BDActivity;
 import com.facsu.publicartmap.R;
+import com.facsu.publicartmap.widget.TitleBar;
 
 /**
  * base activity
@@ -16,8 +17,8 @@ import com.facsu.publicartmap.R;
  * 
  */
 public class PMActivity extends BDActivity {
-	
-	private TextView titleTv;
+
+	private TitleBar titleBar;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -29,9 +30,7 @@ public class PMActivity extends BDActivity {
 		requestWindowFeature(customTitleType());
 		super.setContentView(layoutResID);
 		if (customTitleType() == Window.FEATURE_CUSTOM_TITLE) {
-			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-					R.layout.custom_title);
-			titleTv = (TextView) findViewById(R.id.title);
+			initCustomTitle();
 		}
 	}
 
@@ -40,9 +39,7 @@ public class PMActivity extends BDActivity {
 		requestWindowFeature(customTitleType());
 		super.setContentView(view);
 		if (customTitleType() == Window.FEATURE_CUSTOM_TITLE) {
-			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-					R.layout.custom_title);
-			titleTv = (TextView) findViewById(R.id.title);
+			initCustomTitle();
 		}
 	}
 
@@ -51,10 +48,15 @@ public class PMActivity extends BDActivity {
 		requestWindowFeature(customTitleType());
 		super.setContentView(view, params);
 		if (customTitleType() == Window.FEATURE_CUSTOM_TITLE) {
-			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-					R.layout.custom_title);
-			titleTv = (TextView) findViewById(R.id.title);
+			initCustomTitle();
 		}
+	}
+
+	private void initCustomTitle() {
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				R.layout.custom_title);
+		titleBar = (TitleBar) findViewById(R.id.titlebar);
+		setBackButtonEnable(true);
 	}
 
 	/**
@@ -65,11 +67,23 @@ public class PMActivity extends BDActivity {
 	protected int customTitleType() {
 		return Window.FEATURE_CUSTOM_TITLE;
 	}
-	
+
 	@Override
 	public void setTitle(CharSequence title) {
 		super.setTitle(title);
-		titleTv.setText(title.toString());
+		titleBar.setTitle(title.toString());
+	}
+
+	public void setLeftButton(int resId, OnClickListener listener) {
+		titleBar.setLeftButton(resId, listener);
+	}
+
+	public void setRightButton(int resId, OnClickListener listener) {
+		titleBar.setRightButton(resId, listener);
+	}
+
+	public void setBackButtonEnable(boolean enable) {
+		titleBar.setBackButtonEnable(enable);
 	}
 
 }

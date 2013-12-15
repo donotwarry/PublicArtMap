@@ -75,6 +75,10 @@ public class ExploreFragment extends PMMapFragment implements
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
+		setLeftButton(R.drawable.title_referesh, this);
+		setRightButton(R.drawable.title_add, this);
+
 		mapView().getController().setZoom(14);
 		mapView().getController().enableClick(true);
 		mapView().setBuiltInZoomControls(true);
@@ -138,7 +142,13 @@ public class ExploreFragment extends PMMapFragment implements
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.mylocation) {
+		if (v.getId() == R.id.title_left_btn) {
+			refereshData();
+
+		} else if (v.getId() == R.id.title_right_btn) {
+			// TODO
+
+		} else if (v.getId() == R.id.mylocation) {
 			if (locData != null) {
 				mapController().animateTo(
 						new GeoPoint((int) (locData.latitude * 1e6),
