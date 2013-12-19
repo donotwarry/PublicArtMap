@@ -46,6 +46,7 @@ public class ExploreFragment extends PMMapFragment implements
 	private View rootView;
 	private LocationClient locClient;
 	private LocationData locData;
+	private BDLocation location;
 	private MyLocationOverlay myLocationOverlay;
 	private MyOverlay resultOverlay;
 	private PopupOverlay pop;
@@ -106,7 +107,9 @@ public class ExploreFragment extends PMMapFragment implements
 		locClient.registerLocationListener(this);
 		LocationClientOption option = new LocationClientOption();
 		option.setOpenGps(true);
+		option.setAddrType("all");
 		option.setCoorType("bd09ll");
+		option.setPriority(LocationClientOption.NetWorkFirst);
 		option.setScanSpan(60000);
 		locClient.setLocOption(option);
 		locClient.start();
@@ -145,8 +148,13 @@ public class ExploreFragment extends PMMapFragment implements
 			refereshData();
 
 		} else if (v.getId() == R.id.title_right_btn) {
-			startActivity(new Intent(Intent.ACTION_VIEW,
-					Uri.parse("pam://share")));
+			Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("pam://share"));
+			if (location != null) {
+				i.putExtra("lat", location.getLatitude());
+				i.putExtra("lng", location.getLongitude());
+				i.putExtra("address", location.getAddrStr());
+			}
+			startActivity(i);
 
 		} else if (v.getId() == R.id.mylocation) {
 			if (locData != null) {
@@ -202,6 +210,7 @@ public class ExploreFragment extends PMMapFragment implements
 				|| (location.getLatitude() == 0 && location.getLongitude() == 0))
 			return;
 
+		this.location = location;
 		locData.latitude = location.getLatitude();
 		locData.longitude = location.getLongitude();
 		locData.accuracy = location.getRadius();
@@ -209,7 +218,6 @@ public class ExploreFragment extends PMMapFragment implements
 		myLocationOverlay.setData(locData);
 		mapView().refresh();
 		if (isRequest || isFirstLoc) {
-			// �ƶ���ͼ����λ��
 			Log.d("LocationOverlay", "receive location, animate to it");
 			mapController().animateTo(
 					new GeoPoint((int) (locData.latitude * 1e6),
@@ -250,7 +258,6 @@ public class ExploreFragment extends PMMapFragment implements
 
 	private void refereshData() {
 		GeoPoint cp = mapView().getMapCenter();
-		// ��ǰγ�ߵĿ�ȣ��ӵ�ͼ���ϱ�Ե���±�Ե��
 		int tbSpan = mapView().getLatitudeSpan();
 		double clat = (double) cp.getLatitudeE6() / 1e6;
 		double clng = (double) cp.getLongitudeE6() / 1e6;

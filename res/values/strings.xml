@@ -11,6 +11,7 @@
     <string name="lab_m">米</string>
     <string name="lab_km">公里</string>
     <string name="lab_10km">万公里</string>
+    <string name="share_tips">请阅读＃用户服务协议＃，遵守相关约定</string>
     
     <!-- artworkinfo -->
     <string name="artwork_name">作品名称：</string>

@@ -72,7 +72,9 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        <activity android:name="com.facsu.publicartmap.explore.ShareArtworkActivity" >
+        <activity
+            android:name="com.facsu.publicartmap.explore.ShareArtworkActivity"
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
