@@ -14,18 +14,17 @@ import com.facsu.publicartmap.R;
 public class NetworkPhotoView extends NetworkImageView {
 
 	public NetworkPhotoView(Context context) {
-		super(context);
-		isPhoto = true;
+		this(context, null);
 	}
 
 	public NetworkPhotoView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		isPhoto = true;
+		this(context, attrs, 0);
 	}
 
 	public NetworkPhotoView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		isPhoto = true;
+		progressTextColor = context.getResources().getColor(R.color.gray);
 	}
 
 	protected Bitmap bitmap;
@@ -33,6 +32,11 @@ public class NetworkPhotoView extends NetworkImageView {
 	int totalBytes;
 	String percent = " ";
 	private Paint defaultPaint;
+	private int progressTextColor;
+	
+	public void setProgressTextColor(int color) {
+		this.progressTextColor = color;
+	}
 
 	@Override
 	public void setDrawable(Drawable d, boolean isPlaceholder) {
@@ -65,8 +69,7 @@ public class NetworkPhotoView extends NetworkImageView {
 				defaultPaint = new Paint();
 				defaultPaint.setAntiAlias(true);
 
-				defaultPaint.setColor(getContext().getResources().getColor(
-						R.color.gray));
+				defaultPaint.setColor(progressTextColor);
 				defaultPaint.setTextAlign(Paint.Align.CENTER);
 				defaultPaint.setTextSize(12 * getResources()
 						.getDisplayMetrics().density);

@@ -3,6 +3,8 @@ package com.facsu.publicartmap.explore;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -53,7 +55,6 @@ public class ArtworkInfoActivity extends PMActivity implements
 		locTv = (TextView) findViewById(R.id.artworkinfo_location);
 		locTv.setOnClickListener(this);
 		findViewById(R.id.artworkinfo_comment_add).setOnClickListener(this);
-		imgPager.setOnClickListener(this);
 
 		adapter = new Adapter();
 		imgPager.setAdapter(adapter);
@@ -77,9 +78,6 @@ public class ArtworkInfoActivity extends PMActivity implements
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.artworkinfo_comment_add) {
-			// TODO
-
-		} else if (v.getId() == R.id.artworkinfo_pager) {
 			// TODO
 
 		} else if (v.getId() == R.id.artworkinfo_location) {
@@ -165,6 +163,23 @@ public class ArtworkInfoActivity extends PMActivity implements
 			if (position == viewList.size()) {
 				viewList.add(imageView);
 			}
+
+			imageView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					List<String> images = new ArrayList<String>();
+					for (ArtworkImage image : imagesResult.result()) {
+						images.add(String
+								.format("http://web358082.dnsvhost.com/ACservice/pics/%s.jpg",
+										image.ImageURL));
+					}
+					Intent i = new Intent(Intent.ACTION_VIEW, Uri
+							.parse("pam://photopager"));
+					i.putExtra("images", images.toArray(new String[0]));
+					startActivity(i);
+				}
+			});
 
 			return imageView;
 		}
