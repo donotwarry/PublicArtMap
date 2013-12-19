@@ -48,24 +48,40 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name="com.facsu.publicartmap.explore.ArtworkInfoActivity">
+        <activity android:name="com.facsu.publicartmap.explore.ArtworkInfoActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="pam" android:host="artworkinfo"/>
+
+                <data
+                    android:host="artworkinfo"
+                    android:scheme="pam" />
             </intent-filter>
         </activity>
-        
-        <activity android:name="com.facsu.publicartmap.explore.PhotoPagerActivity">
+        <activity android:name="com.facsu.publicartmap.explore.PhotoPagerActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="pam" android:host="photopager"/>
+
+                <data
+                    android:host="photopager"
+                    android:scheme="pam" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.facsu.publicartmap.explore.ShareArtworkActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="share"
+                    android:scheme="pam" />
             </intent-filter>
         </activity>
     </application>

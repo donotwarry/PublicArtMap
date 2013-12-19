@@ -51,8 +51,8 @@ public class ExploreFragment extends PMMapFragment implements
 	private PopupOverlay pop;
 	private PopupView popView;
 
-	boolean isRequest = false;// ÊÇ·ñÊÖ¶¯´¥·¢ÇëÇó¶¨Î»
-	boolean isFirstLoc = true;// ÊÇ·ñÊ×´Î¶¨Î»
+	boolean isRequest = false;
+	boolean isFirstLoc = true;
 
 	private MApiRequest request;
 	private Artwork[] data;
@@ -101,7 +101,6 @@ public class ExploreFragment extends PMMapFragment implements
 		popView = (PopupView) getActivity().getLayoutInflater().inflate(
 				R.layout.layout_pop, null);
 
-		// ¶¨Î»³õÊ¼»¯
 		locClient = new LocationClient(getActivity());
 		locData = new LocationData();
 		locClient.registerLocationListener(this);
@@ -146,7 +145,8 @@ public class ExploreFragment extends PMMapFragment implements
 			refereshData();
 
 		} else if (v.getId() == R.id.title_right_btn) {
-			// TODO
+			startActivity(new Intent(Intent.ACTION_VIEW,
+					Uri.parse("pam://share")));
 
 		} else if (v.getId() == R.id.mylocation) {
 			if (locData != null) {
@@ -209,7 +209,7 @@ public class ExploreFragment extends PMMapFragment implements
 		myLocationOverlay.setData(locData);
 		mapView().refresh();
 		if (isRequest || isFirstLoc) {
-			// ÒÆ¶¯µØÍ¼µ½¶¨Î»µã
+			// ï¿½Æ¶ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 			Log.d("LocationOverlay", "receive location, animate to it");
 			mapController().animateTo(
 					new GeoPoint((int) (locData.latitude * 1e6),
@@ -250,7 +250,7 @@ public class ExploreFragment extends PMMapFragment implements
 
 	private void refereshData() {
 		GeoPoint cp = mapView().getMapCenter();
-		// µ±Ç°Î³ÏßµÄ¿ç¶È£¨´ÓµØÍ¼µÄÉÏ±ßÔµµ½ÏÂ±ßÔµ£©
+		// ï¿½ï¿½Ç°Î³ï¿½ßµÄ¿ï¿½È£ï¿½ï¿½Óµï¿½Í¼ï¿½ï¿½ï¿½Ï±ï¿½Ôµï¿½ï¿½ï¿½Â±ï¿½Ôµï¿½ï¿½
 		int tbSpan = mapView().getLatitudeSpan();
 		double clat = (double) cp.getLatitudeE6() / 1e6;
 		double clng = (double) cp.getLongitudeE6() / 1e6;
@@ -298,7 +298,6 @@ public class ExploreFragment extends PMMapFragment implements
 			GeoPoint pt = new GeoPoint(
 					(int) (Double.valueOf(aw.Latitude) * 1E6),
 					(int) (Double.valueOf(aw.Longitude) * 1E6));
-			// µ¯³ö×Ô¶¨ÒåView
 			pop.showPopup(popView, pt, 32);
 			return true;
 		}
