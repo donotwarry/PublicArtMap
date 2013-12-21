@@ -95,6 +95,7 @@ public class ExploreFragment extends PMMapFragment implements
 				Artwork aw = data[curArtworkIndex];
 				startActivity(new Intent(Intent.ACTION_VIEW,
 						Uri.parse("pam://artworkinfo?id=" + aw.ArtworkID)));
+				curArtworkIndex = -1;
 			}
 
 		};
@@ -305,6 +306,7 @@ public class ExploreFragment extends PMMapFragment implements
 			GeoPoint pt = new GeoPoint(
 					(int) (Double.valueOf(aw.Latitude) * 1E6),
 					(int) (Double.valueOf(aw.Longitude) * 1E6));
+			mapController().animateTo(pt);
 			pop.showPopup(popView, pt, 32);
 			return true;
 		}
