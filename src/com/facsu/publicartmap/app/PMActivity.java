@@ -2,11 +2,11 @@ package com.facsu.publicartmap.app;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
 
-import com.dennytech.common.app.BDActivity;
+import com.dennytech.common.app.CLActivity;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.widget.TitleBar;
 
@@ -16,7 +16,7 @@ import com.facsu.publicartmap.widget.TitleBar;
  * @author dengjun86
  * 
  */
-public class PMActivity extends BDActivity {
+public class PMActivity extends CLActivity {
 
 	private TitleBar titleBar;
 

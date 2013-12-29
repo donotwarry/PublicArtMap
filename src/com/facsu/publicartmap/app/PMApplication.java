@@ -1,7 +1,7 @@
 package com.facsu.publicartmap.app;
 
-import com.dennytech.common.app.BDApplication;
+import com.dennytech.common.app.CLApplication;
 
-public class PMApplication extends BDApplication {
+public class PMApplication extends CLApplication {
 
 }

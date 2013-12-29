@@ -19,6 +19,18 @@
             android:id="@+id/viewfinder_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_barcode_center" />
+        
+        <ImageView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:src="@drawable/ic_barcode_tips"
+            android:layout_marginBottom="20dp"/>
     </FrameLayout>
 
 </LinearLayout>

@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.dennytech.common.app.BDApplication;
 import com.dennytech.common.service.dataservice.Request;
 import com.dennytech.common.service.dataservice.RequestHandler;
 import com.dennytech.common.service.dataservice.Response;
@@ -20,6 +19,7 @@ import com.dennytech.common.service.dataservice.image.ImageService;
 import com.dennytech.common.service.dataservice.image.impl.ImageRequest;
 import com.dennytech.common.util.BDUtils;
 import com.facsu.publicartmap.R;
+import com.facsu.publicartmap.app.PMApplication;
 
 public class NetworkImageView extends ImageView implements
 		RequestHandler<Request, Response> {
@@ -118,7 +118,7 @@ public class NetworkImageView extends ImageView implements
 	protected ImageService imageService() {
 		synchronized (NetworkImageView.class) {
 			if (imageService == null) {
-				imageService = (ImageService) BDApplication.instance()
+				imageService = (ImageService) PMApplication.instance()
 						.getService("image");
 			}
 		}

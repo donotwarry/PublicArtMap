@@ -59,8 +59,15 @@ public class ArtworkInfoActivity extends PMActivity implements
 		adapter = new Adapter();
 		imgPager.setAdapter(adapter);
 
-		artworkID = getIntent().getData().getQueryParameter("id");
-		requestInfo();
+		Artwork artwork= getIntent().getParcelableExtra("artwork");
+		artworkID = artwork == null ? getIntent().getData().getQueryParameter("id") : artwork.ArtworkID;
+		
+		if (artwork != null) {
+			setArtwork(artwork);
+		} else {
+			requestInfo();
+		}
+		
 		requestImages();
 	}
 
