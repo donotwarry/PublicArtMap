@@ -23,12 +23,25 @@ import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMActivity;
 import com.facsu.publicartmap.bean.Artwork;
 import com.facsu.publicartmap.bean.ArtworkImage;
+import com.facsu.publicartmap.bean.CreateUserResult;
 import com.facsu.publicartmap.bean.GetArtworkByIDResult;
 import com.facsu.publicartmap.bean.GetImageUrlsResult;
+import com.facsu.publicartmap.bean.VoteResult;
+import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.widget.NetworkPhotoView;
+import com.umeng.socialize.bean.SocializeUser;
+import com.umeng.socialize.controller.RequestType;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.UMSsoHandler;
+import com.umeng.socialize.controller.listener.SocializeListeners.FetchUserListener;
+import com.umeng.socialize.media.UMImage;
 
 public class ArtworkInfoActivity extends PMActivity implements
 		MApiRequestHandler, OnClickListener {
+
+	final UMSocialService mController = UMServiceFactory.getUMSocialService(
+			"com.umeng.share", RequestType.SOCIAL);
 
 	private ViewPager imgPager;
 	private Adapter adapter;
@@ -39,6 +52,8 @@ public class ArtworkInfoActivity extends PMActivity implements
 
 	private MApiRequest infoReq;
 	private MApiRequest imgReq;
+	private MApiRequest voteReq;
+	private MApiRequest createUserReq;
 	private String artworkID;
 	private GetArtworkByIDResult infoResult;
 	private GetImageUrlsResult imagesResult;
@@ -47,9 +62,11 @@ public class ArtworkInfoActivity extends PMActivity implements
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_artworkinfo);
+		setRightButton(R.drawable.title_share, this);
 		imgPager = (ViewPager) findViewById(R.id.artworkinfo_pager);
 		imgLoadingPb = findViewById(R.id.artworkinfo_images_loading);
 		voteNumTv = (TextView) findViewById(R.id.artworkinfo_vote);
+		voteNumTv.setOnClickListener(this);
 		commentNumTv = (TextView) findViewById(R.id.artworkinfo_comment_num);
 		introTv = (TextView) findViewById(R.id.artworkinfo_intro);
 		locTv = (TextView) findViewById(R.id.artworkinfo_location);
@@ -59,15 +76,16 @@ public class ArtworkInfoActivity extends PMActivity implements
 		adapter = new Adapter();
 		imgPager.setAdapter(adapter);
 
-		Artwork artwork= getIntent().getParcelableExtra("artwork");
-		artworkID = artwork == null ? getIntent().getData().getQueryParameter("id") : artwork.ArtworkID;
-		
+		Artwork artwork = getIntent().getParcelableExtra("artwork");
+		artworkID = artwork == null ? getIntent().getData().getQueryParameter(
+				"id") : artwork.ArtworkID;
+
 		if (artwork != null) {
 			setArtwork(artwork);
 		} else {
 			requestInfo();
 		}
-		
+
 		requestImages();
 	}
 
@@ -79,6 +97,12 @@ public class ArtworkInfoActivity extends PMActivity implements
 		if (imgReq != null) {
 			mapiService().abort(imgReq, this, true);
 		}
+		if (voteReq != null) {
+			mapiService().abort(voteReq, this, true);
+		}
+		if (createUserReq != null) {
+			mapiService().abort(createUserReq, this, true);
+		}
 		super.onDestroy();
 	}
 
@@ -89,6 +113,52 @@ public class ArtworkInfoActivity extends PMActivity implements
 
 		} else if (v.getId() == R.id.artworkinfo_location) {
 			// TODO
+		} else if (v.getId() == R.id.artworkinfo_vote) {
+			if (voteReq != null) {
+				mapiService().abort(voteReq, this, true);
+			}
+			voteReq = BasicMApiRequest.mapiGet(
+					"http://web358082.dnsvhost.com/ACservice/ACService.svc/Vote/"
+							+ Environment.userID() + "/" + artworkID + "/1",
+					CacheType.DISABLED, VoteResult.class);
+			mapiService().exec(voteReq, this);
+
+		} else if (v.getId() == R.id.title_right_btn) {
+			// 设置分享内容
+			mController.setShareContent(getString(R.string.msg_share_text));
+			// 设置分享图片, 参数2为图片的url地址
+			if (imagesResult != null) {
+				mController.setShareMedia(new UMImage(this, String.format(
+						"http://web358082.dnsvhost.com/ACservice/pics/%s.jpg",
+						imagesResult.GetImageUrlsResult[imgPager
+								.getCurrentItem()].ImageURL)));
+				mController.openShare(this, false);
+				mController.getUserInfo(this, new FetchUserListener() {
+					@Override
+					public void onStart() {
+					}
+
+					@Override
+					public void onComplete(int status, SocializeUser user) {
+						if (user != null) {
+							Intent i = new Intent("action_referesh_user");
+							sendBroadcast(i);
+						}
+					}
+				});
+			}
+
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		/** 使用SSO授权必须添加如下代码 */
+		UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(
+				requestCode);
+		if (ssoHandler != null) {
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
 		}
 	}
 
@@ -205,6 +275,12 @@ public class ArtworkInfoActivity extends PMActivity implements
 
 	@Override
 	public void onRequestFailed(MApiRequest req, MApiResponse resp) {
+		if (req == infoReq) {
+		} else if (req == imgReq) {
+		} else if (req == voteReq) {
+			showDialog(getString(R.string.app_name),
+					getString(R.string.msg_vote_failed), null);
+		}
 	}
 
 	@Override
@@ -221,6 +297,30 @@ public class ArtworkInfoActivity extends PMActivity implements
 				adapter.notifyDataSetChanged();
 			}
 			imgLoadingPb.setVisibility(View.GONE);
+		} else if (req == voteReq) {
+			if (resp.result() instanceof VoteResult) {
+				VoteResult result = (VoteResult) resp.result();
+				if (!result.VoteResult.hasError()) {
+					int voteNum = Integer.valueOf(voteNumTv.getText()
+							.toString()) + 1;
+					voteNumTv.setText(String.valueOf(voteNum));
+					showDialog(getString(R.string.app_name),
+							getString(R.string.msg_vote_success), null);
+				} else {
+					showDialog(getString(R.string.app_name),
+							result.VoteResult.ErrorDesc, null);
+				}
+
+			} else {
+				showDialog(getString(R.string.app_name),
+						getString(R.string.msg_vote_failed), null);
+			}
+		} else if (req == createUserReq) {
+			if (resp.result() instanceof CreateUserResult) {
+				CreateUserResult result = (CreateUserResult) resp.result();
+				preferences().edit().putString("uid", result.CreateUserResult.ID);
+				Environment.setUserID(result.CreateUserResult.ID);
+			}
 		}
 	}
 

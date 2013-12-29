@@ -20,6 +20,9 @@
     <string name="artwork_author">艺术家：</string>
     <string name="artwork_time">时间：</string>
     <string name="artwork_intro">作品介绍：</string>
+    <string name="msg_vote_success">投票成功！感谢您对该作品的支持！</string>
+    <string name="msg_vote_failed">投票失败</string>
+    <string name="msg_share_text">我发现了一个公共艺术作品，特别棒，分享给大家～</string>
     
     <!-- barcode -->
     <string name="title_barcode">扫一扫</string>
@@ -27,5 +30,13 @@
     
     <!-- me -->
     <string name="title_me">关于我们</string>
+    <string name="section_login">第三方登录</string>
+    <string name="section_info">产品信息</string>
+    <string name="menu_login">个人中心</string>
+    <string name="menu_feedback">意见反馈</string>
+    <string name="menu_update">检查更新</string>
+    <string name="menu_about">关于</string>
+    <string name="btn_logout">登出</string>
+    <string name="msg_logout">正在登出...</string>
 
 </resources>

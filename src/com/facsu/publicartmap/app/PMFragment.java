@@ -3,7 +3,9 @@ package com.facsu.publicartmap.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -123,5 +125,15 @@ public class PMFragment extends CLFragment {
 			managedDialog.dismiss();
 		}
 		managedDialog = null;
+	}
+	
+	private SharedPreferences sharePref;
+
+	public SharedPreferences preferences() {
+		if (sharePref == null) {
+			sharePref = getActivity().getSharedPreferences(getActivity().getPackageName(),
+					Context.MODE_PRIVATE);
+		}
+		return sharePref;
 	}
 }

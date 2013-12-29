@@ -1,5 +1,7 @@
 package com.facsu.publicartmap.app;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,6 +86,16 @@ public class PMActivity extends CLActivity {
 
 	public void enableBackButton(boolean enable) {
 		titleBar.enableBackButton(enable);
+	}
+	
+	private SharedPreferences sharePref;
+
+	public SharedPreferences preferences() {
+		if (sharePref == null) {
+			sharePref = getSharedPreferences(getPackageName(),
+					Context.MODE_PRIVATE);
+		}
+		return sharePref;
 	}
 
 }
