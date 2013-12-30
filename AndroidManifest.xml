@@ -26,9 +26,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_GPS" />
-    
-    <!-- zxing  -->
+
+    <!-- zxing -->
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" />
@@ -39,7 +40,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.PM" >
-        
+
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -55,7 +56,6 @@
             android:exported="true"
             android:process=":DownloadingService" >
         </service>
-        
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -109,13 +109,17 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="cn.sharesdk.framework.ShareSDKUIShell"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

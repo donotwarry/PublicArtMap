@@ -2,6 +2,7 @@ package com.facsu.publicartmap;
 
 import android.os.Bundle;
 import android.view.Window;
+import cn.sharesdk.framework.ShareSDK;
 
 import com.facsu.publicartmap.app.PMTabActivity;
 import com.facsu.publicartmap.barcode.BarcodeFragment;
@@ -20,6 +21,14 @@ public class MainActivity extends PMTabActivity {
 				R.drawable.tab_barcode), BarcodeFragment.class);
 		addTab(setIndicatorImage(tabHost.newTabSpec("me"), R.drawable.tab_me),
 				MeFragment.class);
+		
+		ShareSDK.initSDK(this);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		ShareSDK.stopSDK(this);
+		super.onDestroy();
 	}
 
 	@Override

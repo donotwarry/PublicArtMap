@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,19 +40,19 @@ import com.facsu.publicartmap.widget.NetworkThumbView;
 
 public class MeFragment extends PMFragment implements OnItemClickListener,
 		MApiRequestHandler, PlatformActionListener, Callback {
-	
+
 	private static final int MSG_USERID_FOUND = 1;
 	private static final int MSG_LOGIN = 2;
 	private static final int MSG_AUTH_CANCEL = 3;
-	private static final int MSG_AUTH_ERROR= 4;
+	private static final int MSG_AUTH_ERROR = 4;
 	private static final int MSG_AUTH_COMPLETE = 5;
 
 	private ListView list;
 	private Adapter adapter;
 
 	private MApiRequest request;
-	
-	Platform platform;
+
+	private Platform platform;
 
 	private static final String ACTION_REFRESH_USER = "action_referesh_user";
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -86,6 +87,17 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		enableBackButton(false);
+
+		SinaWeibo weibo = new SinaWeibo(getActivity());
+		if (weibo.isValid()) {
+			String userId = weibo.getDb().getUserId();
+			if (userId != null) {
+				login(weibo.getName(), userId, weibo.getDb().getUserName(),
+						weibo.getDb().getUserIcon(), null);
+				this.platform = weibo;
+				adapter.reset();
+			}
+		}
 	}
 
 	@Override
@@ -127,21 +139,23 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			if ("login".equals(menu.intent.getAction())) {
 				authorize(new SinaWeibo(getActivity()));
 			} else {
-//				startActivity(menu.intent);
+				// startActivity(menu.intent);
 			}
 		}
 	}
-	
+
 	private void authorize(Platform plat) {
 		if (plat == null) {
 			return;
 		}
-		
-		if(plat.isValid()) {
+
+		if (plat.isValid()) {
 			String userId = plat.getDb().getUserId();
 			if (userId != null) {
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
-				login(plat.getName(), userId, null);
+				login(plat.getName(), userId, plat.getDb().getUserName(), plat
+						.getDb().getUserIcon(), null);
+				this.platform = plat;
 				return;
 			}
 		}
@@ -149,42 +163,49 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		plat.SSOSetting(true);
 		plat.showUser(null);
 	}
-	
-	private void login(String plat, String userId, HashMap<String, Object> userInfo) {
-		Message msg = new Message();
-		msg.what = MSG_LOGIN;
-		msg.obj = plat;
-		UIHandler.sendMessage(msg, this);
+
+	private void login(String plat, String userId, String userName,
+			String userIcon, HashMap<String, Object> userInfo) {
+		// Message msg = new Message();
+		// msg.what = MSG_LOGIN;
+		// msg.obj = plat;
+		// UIHandler.sendMessage(msg, this);
+
+		requestUser(userName, "", userIcon, "暂无");
 	}
-	
+
 	public boolean handleMessage(Message msg) {
-		switch(msg.what) {
-			case MSG_USERID_FOUND: {
-				Toast.makeText(getActivity(), R.string.userid_found, Toast.LENGTH_SHORT).show();
-			}
+		switch (msg.what) {
+		case MSG_USERID_FOUND: {
+			Toast.makeText(getActivity(), R.string.userid_found,
+					Toast.LENGTH_SHORT).show();
+		}
 			break;
-			case MSG_LOGIN: {
-				String text = getString(R.string.logining, msg.obj);
-				Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-				
-				Builder builder = new Builder(getActivity());
-				builder.setTitle(R.string.if_register_needed);
-				builder.setMessage(R.string.after_auth);
-				builder.setPositiveButton(R.string.ok, null);
-				builder.create().show();
-			}
+		case MSG_LOGIN: {
+			String text = getString(R.string.logining, msg.obj);
+			Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+
+			Builder builder = new Builder(getActivity());
+			builder.setTitle(R.string.if_register_needed);
+			builder.setMessage(R.string.after_auth);
+			builder.setPositiveButton(R.string.ok, null);
+			builder.create().show();
+		}
 			break;
-			case MSG_AUTH_CANCEL: {
-				Toast.makeText(getActivity(), R.string.auth_cancel, Toast.LENGTH_SHORT).show();
-			}
+		case MSG_AUTH_CANCEL: {
+			Toast.makeText(getActivity(), R.string.auth_cancel,
+					Toast.LENGTH_SHORT).show();
+		}
 			break;
-			case MSG_AUTH_ERROR: {
-				Toast.makeText(getActivity(), R.string.auth_error, Toast.LENGTH_SHORT).show();
-			}
+		case MSG_AUTH_ERROR: {
+			Toast.makeText(getActivity(), R.string.auth_error,
+					Toast.LENGTH_SHORT).show();
+		}
 			break;
-			case MSG_AUTH_COMPLETE: {
-				Toast.makeText(getActivity(), R.string.auth_complete, Toast.LENGTH_SHORT).show();
-			}
+		case MSG_AUTH_COMPLETE: {
+			Toast.makeText(getActivity(), R.string.auth_complete,
+					Toast.LENGTH_SHORT).show();
+		}
 			break;
 		}
 		return false;
@@ -205,7 +226,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 			List<Menu> menus = new ArrayList<Menu>();
 			Menu loginMenu = new Menu(R.drawable.ic_me_login,
-					getString(R.string.menu_login), new Intent("login"));
+					getString(R.string.menu_weibo_login), new Intent("login"));
 			if (platform != null) {
 				loginMenu.iconUrl = platform.getDb().getUserIcon();
 				loginMenu.title = platform.getDb().getUserName();
@@ -274,22 +295,29 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			} else {
 				View view = LayoutInflater.from(getActivity()).inflate(
 						R.layout.list_item_me_menu, null);
-				NetworkThumbView icon = (NetworkThumbView) view
-						.findViewById(R.id.icon);
+				NetworkThumbView neticon = (NetworkThumbView) view
+						.findViewById(R.id.net_icon);
+				ImageView icon = (ImageView) view.findViewById(R.id.icon);
 				TextView title = (TextView) view.findViewById(R.id.title);
 				title.setText(((Menu) item).title);
 				View logout = view.findViewById(R.id.logout);
 				if (((Menu) item).iconUrl != null) {
-					icon.setImage(((Menu) item).iconUrl);
+					neticon.setImage(((Menu) item).iconUrl);
+					neticon.setVisibility(View.VISIBLE);
+					icon.setVisibility(View.GONE);
 					logout.setVisibility(View.VISIBLE);
 					logout.setOnClickListener(new View.OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
-							
+							platform.removeAccount();
+							platform = null;
+							reset();
 						}
 					});
 				} else {
+					neticon.setVisibility(View.GONE);
+					icon.setVisibility(View.VISIBLE);
 					icon.setImageResource(((Menu) item).icon);
 					logout.setVisibility(View.GONE);
 				}
@@ -326,6 +354,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			preferences().edit().putString("uid", result.CreateUserResult.ID)
 					.commit();
 			Environment.setUserID(result.CreateUserResult.ID);
+			adapter.reset();
 		}
 	}
 
@@ -336,20 +365,27 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 	@Override
 	public void onCancel(Platform arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
-		// TODO Auto-generated method stub
-		
+	public void onComplete(Platform plat, int arg1, HashMap<String, Object> arg2) {
+		if (plat == null) {
+			return;
+		}
+
+		if (plat.isValid()) {
+			String userId = plat.getDb().getUserId();
+			if (userId != null) {
+				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
+				login(plat.getName(), userId, plat.getDb().getUserName(), plat
+						.getDb().getUserIcon(), null);
+				this.platform = plat;
+			}
+		}
 	}
 
 	@Override
 	public void onError(Platform arg0, int arg1, Throwable arg2) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

@@ -32,14 +32,14 @@
     <string name="title_me">关于我们</string>
     <string name="section_login">第三方登录</string>
     <string name="section_info">产品信息</string>
-    <string name="menu_login">个人中心</string>
+    <string name="menu_weibo_login">新浪微博登录</string>
     <string name="menu_feedback">意见反馈</string>
     <string name="menu_update">检查更新</string>
     <string name="menu_about">关于</string>
     <string name="btn_logout">登出</string>
     <string name="msg_logout">正在登出...</string>
     
-    <string name="userid_found">用户信息已存在，正在跳转登录操作…</string>
+    <string name="userid_found">正在登录…</string>
     <string name="logining">使用%s帐号登录中…</string>
     <string name="auth_cancel">授权操作已取消</string>
     <string name="auth_error">授权操作遇到错误，请阅读Logcat输出</string>
