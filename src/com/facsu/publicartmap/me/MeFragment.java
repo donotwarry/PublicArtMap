@@ -173,7 +173,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 					}
 				});
 			} else {
-				startActivity(menu.intent);
+//				startActivity(menu.intent);
 			}
 		}
 	}
