@@ -13,6 +13,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.Platform.ShareParams;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
 
 import com.dennytech.common.service.dataservice.mapi.CacheType;
 import com.dennytech.common.service.dataservice.mapi.MApiRequest;
@@ -29,19 +33,9 @@ import com.facsu.publicartmap.bean.GetImageUrlsResult;
 import com.facsu.publicartmap.bean.VoteResult;
 import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.widget.NetworkPhotoView;
-import com.umeng.socialize.bean.SocializeUser;
-import com.umeng.socialize.controller.RequestType;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.UMSsoHandler;
-import com.umeng.socialize.controller.listener.SocializeListeners.FetchUserListener;
-import com.umeng.socialize.media.UMImage;
 
 public class ArtworkInfoActivity extends PMActivity implements
 		MApiRequestHandler, OnClickListener {
-
-	final UMSocialService mController = UMServiceFactory.getUMSocialService(
-			"com.umeng.share", RequestType.SOCIAL);
 
 	private ViewPager imgPager;
 	private Adapter adapter;
@@ -124,42 +118,71 @@ public class ArtworkInfoActivity extends PMActivity implements
 			mapiService().exec(voteReq, this);
 
 		} else if (v.getId() == R.id.title_right_btn) {
-			// 设置分享内容
-			mController.setShareContent(getString(R.string.msg_share_text));
-			// 设置分享图片, 参数2为图片的url地址
-			if (imagesResult != null) {
-				mController.setShareMedia(new UMImage(this, String.format(
-						"http://web358082.dnsvhost.com/ACservice/pics/%s.jpg",
-						imagesResult.GetImageUrlsResult[imgPager
-								.getCurrentItem()].ImageURL)));
-				mController.openShare(this, false);
-				mController.getUserInfo(this, new FetchUserListener() {
-					@Override
-					public void onStart() {
-					}
-
-					@Override
-					public void onComplete(int status, SocializeUser user) {
-						if (user != null) {
-							Intent i = new Intent("action_referesh_user");
-							sendBroadcast(i);
-						}
-					}
-				});
-			}
-
+			String imgUrl = String
+					.format("http://web358082.dnsvhost.com/ACservice/pics/%s.jpg",
+							imagesResult.GetImageUrlsResult[imgPager
+									.getCurrentItem()].ImageURL);
+			showShare(true, null, getString(R.string.msg_share_text), imgUrl);
 		}
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		/** 使用SSO授权必须添加如下代码 */
-		UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(
-				requestCode);
-		if (ssoHandler != null) {
-			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	private void showShare(boolean silent, String platform, String content,
+			String imgUrl) {
+		final OnekeyShare oks = new OnekeyShare();
+		oks.setNotification(R.drawable.ic_launcher,
+				getString(R.string.app_name));
+		oks.setAddress("12345678901");
+		// oks.setTitle(getString(R.string.evenote_title));
+		// oks.setTitleUrl("http://sharesdk.cn");
+		oks.setText(content);
+		// oks.setImagePath(MainActivity.TEST_IMAGE);
+		oks.setImageUrl(imgUrl);
+		oks.setUrl("http://www.sharesdk.cn");
+		// oks.setFilePath(MainActivity.TEST_IMAGE);
+		// oks.setComment(menu.getContext().getString(R.string.share));
+		// oks.setSite(getString(R.string.app_name));
+		// oks.setSiteUrl("http://sharesdk.cn");
+		oks.setVenueName(getString(R.string.app_name));
+		// oks.setVenueDescription("This is a beautiful place!");
+		oks.setLatitude(23.056081f);
+		oks.setLongitude(113.385708f);
+		oks.setSilent(silent);
+		if (platform != null) {
+			oks.setPlatform(platform);
 		}
+
+		// 去除注释，可令编辑页面显示为Dialog模式
+		// oks.setDialogMode();
+
+		// 去除注释，在自动授权时可以禁用SSO方式
+		// oks.disableSSOWhenAuthorize();
+
+		// 去除注释，则快捷分享的操作结果将通过OneKeyShareCallback回调
+		// oks.setCallback(new OneKeyShareCallback());
+		oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
+
+			@Override
+			public void onShare(Platform platform, ShareParams paramsToShare) {
+				Intent i = new Intent("action_referesh_user");
+				sendBroadcast(i);
+			}
+		});
+
+		// 去除注释，演示在九宫格设置自定义的图标
+		// Bitmap logo = BitmapFactory.decodeResource(menu.getResources(),
+		// R.drawable.ic_launcher);
+		// String label = menu.getResources().getString(R.string.app_name);
+		// OnClickListener listener = new OnClickListener() {
+		// public void onClick(View v) {
+		// String text = "Customer Logo -- ShareSDK " +
+		// ShareSDK.getSDKVersionName();
+		// Toast.makeText(menu.getContext(), text, Toast.LENGTH_SHORT).show();
+		// oks.finish();
+		// }
+		// };
+		// oks.setCustomerLogo(logo, label, listener);
+
+		oks.show(this);
 	}
 
 	private void requestInfo() {
@@ -318,7 +341,8 @@ public class ArtworkInfoActivity extends PMActivity implements
 		} else if (req == createUserReq) {
 			if (resp.result() instanceof CreateUserResult) {
 				CreateUserResult result = (CreateUserResult) resp.result();
-				preferences().edit().putString("uid", result.CreateUserResult.ID);
+				preferences().edit().putString("uid",
+						result.CreateUserResult.ID);
 				Environment.setUserID(result.CreateUserResult.ID);
 			}
 		}

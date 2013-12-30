@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler.Callback;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.utils.UIHandler;
+import cn.sharesdk.sina.weibo.SinaWeibo;
 
 import com.dennytech.common.adapter.BasicAdapter;
 import com.dennytech.common.service.dataservice.mapi.MApiRequest;
@@ -28,27 +36,22 @@ import com.facsu.publicartmap.bean.CreateUserResult;
 import com.facsu.publicartmap.common.APIRequest;
 import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.widget.NetworkThumbView;
-import com.umeng.socialize.bean.SocializeEntity;
-import com.umeng.socialize.bean.SocializeUser;
-import com.umeng.socialize.common.SocializeConstants;
-import com.umeng.socialize.controller.RequestType;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.UMSsoHandler;
-import com.umeng.socialize.controller.listener.SocializeListeners.FetchUserListener;
-import com.umeng.socialize.controller.listener.SocializeListeners.SocializeClientListener;
 
 public class MeFragment extends PMFragment implements OnItemClickListener,
-		MApiRequestHandler {
-
-	final UMSocialService mController = UMServiceFactory.getUMSocialService(
-			"com.umeng.share", RequestType.SOCIAL);
-	private SocializeUser mUser;
+		MApiRequestHandler, PlatformActionListener, Callback {
+	
+	private static final int MSG_USERID_FOUND = 1;
+	private static final int MSG_LOGIN = 2;
+	private static final int MSG_AUTH_CANCEL = 3;
+	private static final int MSG_AUTH_ERROR= 4;
+	private static final int MSG_AUTH_COMPLETE = 5;
 
 	private ListView list;
 	private Adapter adapter;
 
 	private MApiRequest request;
+	
+	Platform platform;
 
 	private static final String ACTION_REFRESH_USER = "action_referesh_user";
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -72,28 +75,6 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		adapter = new Adapter();
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
-		mController.getUserInfo(getActivity(), new FetchUserListener() {
-			@Override
-			public void onStart() {
-			}
-
-			@Override
-			public void onComplete(int status, SocializeUser user) {
-				mUser = user;
-				if (mUser != null && mUser.mLoginAccount != null) {
-					String snsuid = mUser.mLoginAccount.getUsid();
-					if (!snsuid.equals(preferences().getString("snsuid", null))
-							|| preferences().getString("uid", null) == null) {
-						preferences().edit().putString("snsuid", snsuid)
-								.commit();
-
-						requestUser(mUser.mLoginAccount.getUserName(), "",
-								mUser.mLoginAccount.getAccountIconUrl(), "暂无");
-					}
-					adapter.notifyDataSetChanged();
-				}
-			}
-		});
 
 		IntentFilter filter = new IntentFilter(ACTION_REFRESH_USER);
 		getActivity().registerReceiver(receiver, filter);
@@ -144,49 +125,69 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		if (item instanceof Menu) {
 			Menu menu = (Menu) item;
 			if ("login".equals(menu.intent.getAction())) {
-				int flag = SocializeConstants.FLAG_USER_CENTER_LOGIN_VERIFY
-						| SocializeConstants.FLAG_USER_CENTER_HIDE_LOGININFO;
-				mController.openUserCenter(getActivity(), flag);
-				mController.getUserInfo(getActivity(), new FetchUserListener() {
-					@Override
-					public void onStart() {
-					}
-
-					@Override
-					public void onComplete(int status, SocializeUser user) {
-						mUser = user;
-						if (mUser != null) {
-							String snsuid = mUser.mLoginAccount.getUsid();
-							if (!snsuid.equals(preferences().getString(
-									"snsuid", null))
-									|| preferences().getString("uid", null) == null) {
-								preferences().edit()
-										.putString("snsuid", snsuid).commit();
-
-								requestUser(
-										mUser.mLoginAccount.getUserName(),
-										"",
-										mUser.mLoginAccount.getAccountIconUrl(),
-										"暂无");
-							}
-						}
-					}
-				});
+				authorize(new SinaWeibo(getActivity()));
 			} else {
 				startActivity(menu.intent);
 			}
 		}
 	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		// 根据requestCode获取对应的SsoHandler
-		UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(
-				requestCode);
-		if (ssoHandler != null) {
-			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	
+	private void authorize(Platform plat) {
+		if (plat == null) {
+			return;
 		}
+		
+		if(plat.isValid()) {
+			String userId = plat.getDb().getUserId();
+			if (userId != null) {
+				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
+				login(plat.getName(), userId, null);
+				return;
+			}
+		}
+		plat.setPlatformActionListener(this);
+		plat.SSOSetting(true);
+		plat.showUser(null);
+	}
+	
+	private void login(String plat, String userId, HashMap<String, Object> userInfo) {
+		Message msg = new Message();
+		msg.what = MSG_LOGIN;
+		msg.obj = plat;
+		UIHandler.sendMessage(msg, this);
+	}
+	
+	public boolean handleMessage(Message msg) {
+		switch(msg.what) {
+			case MSG_USERID_FOUND: {
+				Toast.makeText(getActivity(), R.string.userid_found, Toast.LENGTH_SHORT).show();
+			}
+			break;
+			case MSG_LOGIN: {
+				String text = getString(R.string.logining, msg.obj);
+				Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+				
+				Builder builder = new Builder(getActivity());
+				builder.setTitle(R.string.if_register_needed);
+				builder.setMessage(R.string.after_auth);
+				builder.setPositiveButton(R.string.ok, null);
+				builder.create().show();
+			}
+			break;
+			case MSG_AUTH_CANCEL: {
+				Toast.makeText(getActivity(), R.string.auth_cancel, Toast.LENGTH_SHORT).show();
+			}
+			break;
+			case MSG_AUTH_ERROR: {
+				Toast.makeText(getActivity(), R.string.auth_error, Toast.LENGTH_SHORT).show();
+			}
+			break;
+			case MSG_AUTH_COMPLETE: {
+				Toast.makeText(getActivity(), R.string.auth_complete, Toast.LENGTH_SHORT).show();
+			}
+			break;
+		}
+		return false;
 	}
 
 	class Adapter extends BasicAdapter {
@@ -205,9 +206,9 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			List<Menu> menus = new ArrayList<Menu>();
 			Menu loginMenu = new Menu(R.drawable.ic_me_login,
 					getString(R.string.menu_login), new Intent("login"));
-			if (mUser != null) {
-				loginMenu.iconUrl = mUser.mLoginAccount.getAccountIconUrl();
-				loginMenu.title = mUser.mLoginAccount.getUserName();
+			if (platform != null) {
+				loginMenu.iconUrl = platform.getDb().getUserIcon();
+				loginMenu.title = platform.getDb().getUserName();
 			}
 			menus.add(loginMenu);
 			menuMap.put(sections[0], menus);
@@ -285,28 +286,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 						@Override
 						public void onClick(View v) {
-							mController.deleteOauth(getActivity(),
-									mUser.mDefaultPlatform,
-									new SocializeClientListener() {
-
-										@Override
-										public void onStart() {
-											showProgressDialog(getString(R.string.msg_logout));
-										}
-
-										@Override
-										public void onComplete(int status,
-												SocializeEntity arg1) {
-											dismissDialog();
-											if (status / 100 == 2) {
-												mUser = null;
-												preferences().edit()
-														.remove("snsuid")
-														.remove("uid").commit();
-												reset();
-											}
-										}
-									});
+							
 						}
 					});
 				} else {
@@ -352,6 +332,24 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 	@Override
 	public void onRequestFailed(MApiRequest req, MApiResponse resp) {
 
+	}
+
+	@Override
+	public void onCancel(Platform arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onError(Platform arg0, int arg1, Throwable arg2) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
