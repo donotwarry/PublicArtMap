@@ -103,7 +103,8 @@ public class ArtworkInfoActivity extends PMActivity implements
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.artworkinfo_comment_add) {
-			// TODO
+			startActivity(new Intent(Intent.ACTION_VIEW,
+					Uri.parse("pam://comment?id=" + artworkID)));
 
 		} else if (v.getId() == R.id.artworkinfo_location) {
 			// TODO
