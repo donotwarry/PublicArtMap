@@ -63,6 +63,17 @@
         </service>
 
         <activity
+            android:name="cn.sharesdk.framework.ShareSDKUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
             android:name="com.facsu.publicartmap.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
@@ -109,17 +120,30 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="cn.sharesdk.framework.ShareSDKUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name=".wxapi.WXEntryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name="com.facsu.publicartmap.explore.CommentActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="comment"
+                    android:scheme="pam" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.facsu.publicartmap.explore.ArtworkLocationActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="artworklocation"
+                    android:scheme="pam" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
