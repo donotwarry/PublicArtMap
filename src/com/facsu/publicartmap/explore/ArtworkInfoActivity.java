@@ -163,8 +163,15 @@ public class ArtworkInfoActivity extends PMActivity implements
 
 			@Override
 			public void onShare(Platform platform, ShareParams paramsToShare) {
-				Intent i = new Intent("action_referesh_user");
-				sendBroadcast(i);
+				if (platform != null && platform.isValid()) {
+					Intent i = new Intent("action_referesh_user");
+					i.putExtra("username", platform.getDb().getUserName());
+					i.putExtra("password", "");
+					i.putExtra("avatarurl", platform.getDb().getUserIcon());
+					i.putExtra("signature", "暂无");
+					sendBroadcast(i);
+				}
+				
 			}
 		});
 
