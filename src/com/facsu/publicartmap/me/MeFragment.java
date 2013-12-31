@@ -26,6 +26,7 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.utils.UIHandler;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.weibo.TencentWeibo;
 
 import com.dennytech.common.adapter.BasicAdapter;
 import com.dennytech.common.service.dataservice.mapi.MApiRequest;
@@ -52,7 +53,8 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 	private MApiRequest request;
 
-	private Platform platform;
+	private Platform xlPlatform;
+	private Platform tcPlatform;
 
 	private static final String ACTION_REFRESH_USER = "action_referesh_user";
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -94,7 +96,18 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			if (userId != null) {
 				login(weibo.getName(), userId, weibo.getDb().getUserName(),
 						weibo.getDb().getUserIcon(), null);
-				this.platform = weibo;
+				this.xlPlatform = weibo;
+				adapter.reset();
+			}
+		}
+
+		TencentWeibo tcweibo = new TencentWeibo(getActivity());
+		if (tcweibo.isValid()) {
+			String userId = tcweibo.getDb().getUserId();
+			if (userId != null) {
+				login(tcweibo.getName(), userId, tcweibo.getDb().getUserName(),
+						tcweibo.getDb().getUserIcon(), null);
+				this.tcPlatform = tcweibo;
 				adapter.reset();
 			}
 		}
@@ -136,15 +149,18 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		Object item = arg0.getItemAtPosition(arg2);
 		if (item instanceof Menu) {
 			Menu menu = (Menu) item;
-			if ("login".equals(menu.intent.getAction())) {
-				authorize(new SinaWeibo(getActivity()));
+			if ("weibo".equals(menu.intent.getAction())) {
+				authorize(new SinaWeibo(getActivity()), xlPlatform);
+			} else if ("tcweibo".equals(menu.intent.getAction())) {
+				authorize(new TencentWeibo(getActivity()), tcPlatform);
+
 			} else {
 				// startActivity(menu.intent);
 			}
 		}
 	}
 
-	private void authorize(Platform plat) {
+	private void authorize(Platform plat, Platform save) {
 		if (plat == null) {
 			return;
 		}
@@ -155,7 +171,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
 				login(plat.getName(), userId, plat.getDb().getUserName(), plat
 						.getDb().getUserIcon(), null);
-				this.platform = plat;
+				save = plat;
 				return;
 			}
 		}
@@ -225,13 +241,21 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			menuMap.clear();
 
 			List<Menu> menus = new ArrayList<Menu>();
-			Menu loginMenu = new Menu(R.drawable.ic_me_login,
-					getString(R.string.menu_weibo_login), new Intent("login"));
-			if (platform != null) {
-				loginMenu.iconUrl = platform.getDb().getUserIcon();
-				loginMenu.title = platform.getDb().getUserName();
+			Menu weiboMenu = new Menu(R.drawable.ic_me_weibo,
+					getString(R.string.menu_weibo_login), new Intent("weibo"));
+			if (xlPlatform != null) {
+				weiboMenu.iconUrl = xlPlatform.getDb().getUserIcon();
+				weiboMenu.title = xlPlatform.getDb().getUserName();
 			}
-			menus.add(loginMenu);
+			menus.add(weiboMenu);
+			Menu tcweiboMenu = new Menu(R.drawable.ic_me_tcweibo,
+					getString(R.string.menu_txweibo_login), new Intent(
+							"tcweibo"));
+			if (tcPlatform != null) {
+				tcweiboMenu.iconUrl = tcPlatform.getDb().getUserIcon();
+				tcweiboMenu.title = tcPlatform.getDb().getUserName();
+			}
+			menus.add(tcweiboMenu);
 			menuMap.put(sections[0], menus);
 
 			menus = new ArrayList<Menu>();
@@ -286,7 +310,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			Object item = getItem(position);
+			final Object item = getItem(position);
 			if (item instanceof String) {
 				TextView view = new TextView(getActivity());
 				view.setPadding(10, 10, 10, 10);
@@ -302,16 +326,22 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				title.setText(((Menu) item).title);
 				View logout = view.findViewById(R.id.logout);
 				if (((Menu) item).iconUrl != null) {
-					neticon.setImage(((Menu) item).iconUrl);
 					neticon.setVisibility(View.VISIBLE);
+					neticon.setImage(((Menu) item).iconUrl);
 					icon.setVisibility(View.GONE);
 					logout.setVisibility(View.VISIBLE);
 					logout.setOnClickListener(new View.OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
-							platform.removeAccount();
-							platform = null;
+							if (((Menu) item).intent.getAction()
+									.equals("weibo")) {
+								xlPlatform.removeAccount();
+								xlPlatform = null;
+							} else {
+								tcPlatform.removeAccount();
+								tcPlatform = null;
+							}
 							reset();
 						}
 					});
@@ -379,7 +409,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
 				login(plat.getName(), userId, plat.getDb().getUserName(), plat
 						.getDb().getUserIcon(), null);
-				this.platform = plat;
+				this.xlPlatform = plat;
 			}
 		}
 	}

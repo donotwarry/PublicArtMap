@@ -144,6 +144,20 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.facsu.publicartmap.explore.AddCommentActivity"
+            android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="addcomment"
+                    android:scheme="pam" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

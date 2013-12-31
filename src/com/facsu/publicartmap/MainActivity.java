@@ -6,6 +6,7 @@ import cn.sharesdk.framework.ShareSDK;
 
 import com.facsu.publicartmap.app.PMTabActivity;
 import com.facsu.publicartmap.barcode.BarcodeFragment;
+import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.explore.ExploreFragment;
 import com.facsu.publicartmap.me.MeFragment;
 
@@ -23,6 +24,7 @@ public class MainActivity extends PMTabActivity {
 				MeFragment.class);
 		
 		ShareSDK.initSDK(this);
+		Environment.setUserID(preferences().getString("uid", null));
 	}
 	
 	@Override

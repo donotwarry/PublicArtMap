@@ -1,8 +1,11 @@
 package com.facsu.publicartmap.explore;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -33,6 +36,17 @@ public class CommentActivity extends PMActivity implements MApiRequestHandler {
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_comment);
 		setTitle(getString(R.string.title_comment));
+		setRightButton(R.drawable.title_add, new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri
+						.parse("pam://addcomment?artworkid=" + artworkID));
+				i.putExtra("location",
+						getIntent().getParcelableExtra("location"));
+				startActivity(i);
+			}
+		});
 		list = (ListView) findViewById(R.id.list);
 		adapter = new Adapter();
 		list.setAdapter(adapter);
