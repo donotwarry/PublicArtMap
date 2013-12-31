@@ -36,6 +36,7 @@ import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMMapFragment;
 import com.facsu.publicartmap.bean.Artwork;
 import com.facsu.publicartmap.bean.GetArtworksByGPSResult;
+import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.utils.MapUtils;
 import com.facsu.publicartmap.widget.PopupView;
 
@@ -46,7 +47,7 @@ public class ExploreFragment extends PMMapFragment implements
 	private View rootView;
 	private LocationClient locClient;
 	private LocationData locData;
-	private BDLocation location;
+	private Location myLoc;
 	private MyLocationOverlay myLocationOverlay;
 	private MyOverlay resultOverlay;
 	private PopupOverlay pop;
@@ -93,8 +94,12 @@ public class ExploreFragment extends PMMapFragment implements
 					return;
 				}
 				Artwork aw = data[curArtworkIndex];
-				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse("pam://artworkinfo?id=" + aw.ArtworkID)));
+				Intent intent = new Intent(Intent.ACTION_VIEW,
+						Uri.parse("pam://artworkinfo?id=" + aw.ArtworkID));
+				if (myLoc != null) {
+					intent.putExtra("location", myLoc);
+				}
+				startActivity(intent);
 				curArtworkIndex = -1;
 			}
 
@@ -140,6 +145,7 @@ public class ExploreFragment extends PMMapFragment implements
 		if (request != null) {
 			mapiService().abort(request, this, true);
 		}
+		locClient.stop();
 		super.onDestroy();
 	}
 
@@ -150,10 +156,8 @@ public class ExploreFragment extends PMMapFragment implements
 
 		} else if (v.getId() == R.id.title_right_btn) {
 			Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("pam://share"));
-			if (location != null) {
-				i.putExtra("lat", location.getLatitude());
-				i.putExtra("lng", location.getLongitude());
-				i.putExtra("address", location.getAddrStr());
+			if (myLoc != null) {
+				i.putExtra("location", myLoc);
 			}
 			startActivity(i);
 
@@ -211,7 +215,8 @@ public class ExploreFragment extends PMMapFragment implements
 				|| (location.getLatitude() == 0 && location.getLongitude() == 0))
 			return;
 
-		this.location = location;
+		this.myLoc = new Location(location.getAddrStr(),
+				location.getLatitude(), location.getLongitude());
 		locData.latitude = location.getLatitude();
 		locData.longitude = location.getLongitude();
 		locData.accuracy = location.getRadius();

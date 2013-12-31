@@ -30,6 +30,7 @@ import com.facsu.publicartmap.bean.ArtworkImage;
 import com.facsu.publicartmap.bean.CreateUserResult;
 import com.facsu.publicartmap.bean.GetArtworkByIDResult;
 import com.facsu.publicartmap.bean.GetImageUrlsResult;
+import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.bean.VoteResult;
 import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.widget.NetworkPhotoView;
@@ -48,6 +49,7 @@ public class ArtworkInfoActivity extends PMActivity implements
 	private MApiRequest imgReq;
 	private MApiRequest voteReq;
 	private MApiRequest createUserReq;
+	private Location location;
 	private String artworkID;
 	private GetArtworkByIDResult infoResult;
 	private GetImageUrlsResult imagesResult;
@@ -71,6 +73,7 @@ public class ArtworkInfoActivity extends PMActivity implements
 		imgPager.setAdapter(adapter);
 
 		Artwork artwork = getIntent().getParcelableExtra("artwork");
+		location = getIntent().getParcelableExtra("location");
 		artworkID = artwork == null ? getIntent().getData().getQueryParameter(
 				"id") : artwork.ArtworkID;
 
@@ -107,7 +110,11 @@ public class ArtworkInfoActivity extends PMActivity implements
 					Uri.parse("pam://comment?id=" + artworkID)));
 
 		} else if (v.getId() == R.id.artworkinfo_location) {
-			// TODO
+			Intent intent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("pam://artworklocation"));
+			intent.putExtra("artwork", infoResult.result());
+			startActivity(intent);
+			
 		} else if (v.getId() == R.id.artworkinfo_vote) {
 			if (voteReq != null) {
 				mapiService().abort(voteReq, this, true);

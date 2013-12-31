@@ -132,6 +132,18 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
+        <activity android:name="com.facsu.publicartmap.explore.ArtworkLocationActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="artworklocation"
+                    android:scheme="pam" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

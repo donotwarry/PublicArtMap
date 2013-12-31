@@ -7,10 +7,13 @@ import android.widget.TextView;
 
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMActivity;
+import com.facsu.publicartmap.bean.Location;
 
 public class ShareArtworkActivity extends PMActivity {
 	
 	private TextView addressTv;
+	
+	private Location location;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -25,8 +28,10 @@ public class ShareArtworkActivity extends PMActivity {
 			}
 		});
 		
+		location = getIntent().getParcelableExtra("location");
+		
 		addressTv = (TextView) findViewById(R.id.share_location);
-		addressTv.setText(getIntent().getStringExtra("address") );
+		addressTv.setText(location.address);
 	}
 
 }
