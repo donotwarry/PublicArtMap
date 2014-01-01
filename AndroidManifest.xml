@@ -53,9 +53,14 @@
 
         <service
             android:name="com.umeng.common.net.DownloadingService"
-            android:exported="true"
             android:process=":DownloadingService" >
         </service>
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -155,6 +160,18 @@
 
                 <data
                     android:host="addcomment"
+                    android:scheme="pam" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.facsu.publicartmap.me.AboutActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="about"
                     android:scheme="pam" />
             </intent-filter>
         </activity>

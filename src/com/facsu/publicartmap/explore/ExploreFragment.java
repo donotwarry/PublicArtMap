@@ -58,7 +58,7 @@ public class ExploreFragment extends PMMapFragment implements
 
 	private MApiRequest request;
 	private Artwork[] data;
-	private int curArtworkIndex;
+	private Artwork curArtwork;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,17 +90,18 @@ public class ExploreFragment extends PMMapFragment implements
 
 			@Override
 			public void onClickedPopup(int index) {
-				if (curArtworkIndex < 0) {
+				if (curArtwork == null) {
 					return;
 				}
-				Artwork aw = data[curArtworkIndex];
+
+				Artwork aw = curArtwork;
 				Intent intent = new Intent(Intent.ACTION_VIEW,
 						Uri.parse("pam://artworkinfo?id=" + aw.ArtworkID));
 				if (myLoc != null) {
 					intent.putExtra("location", myLoc);
 				}
 				startActivity(intent);
-				curArtworkIndex = -1;
+				curArtwork = null;
 			}
 
 		};
@@ -307,7 +308,7 @@ public class ExploreFragment extends PMMapFragment implements
 		@Override
 		public boolean onTap(int index) {
 			Artwork aw = data[index];
-			curArtworkIndex = index;
+			curArtwork = aw;
 			popView.setData(aw, locData);
 			GeoPoint pt = new GeoPoint(
 					(int) (Double.valueOf(aw.Latitude) * 1E6),
@@ -322,7 +323,7 @@ public class ExploreFragment extends PMMapFragment implements
 			if (pop != null) {
 				pop.hidePop();
 				mapView().removeView(popView);
-				curArtworkIndex = -1;
+				curArtwork = null;
 			}
 			return false;
 		}

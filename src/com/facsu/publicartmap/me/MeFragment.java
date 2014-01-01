@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -38,6 +39,10 @@ import com.facsu.publicartmap.bean.CreateUserResult;
 import com.facsu.publicartmap.common.APIRequest;
 import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.widget.NetworkThumbView;
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 
 public class MeFragment extends PMFragment implements OnItemClickListener,
 		MApiRequestHandler, PlatformActionListener, Callback {
@@ -154,8 +159,45 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			} else if ("tcweibo".equals(menu.intent.getAction())) {
 				authorize(new TencentWeibo(getActivity()), tcPlatform);
 
+			} else if ("update".equals(menu.intent.getAction())) {
+				UmengUpdateAgent.setUpdateOnlyWifi(false);
+				UmengUpdateAgent.setUpdateAutoPopup(false);
+				UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+					@Override
+					public void onUpdateReturned(int updateStatus,
+							UpdateResponse updateInfo) {
+						dismissDialog();
+						switch (updateStatus) {
+						case UpdateStatus.Yes: // has update
+							UmengUpdateAgent.showUpdateDialog(getActivity(),
+									updateInfo);
+							break;
+						case UpdateStatus.No: // has no update
+							showDialog(getString(R.string.app_name),
+									getString(R.string.update_no), null);
+							break;
+						case UpdateStatus.NoneWifi: // none wifi
+							Toast.makeText(getActivity(),
+									getString(R.string.update_no_wifi),
+									Toast.LENGTH_SHORT).show();
+							break;
+						case UpdateStatus.Timeout: // time out
+							Toast.makeText(getActivity(),
+									getString(R.string.update_timeout),
+									Toast.LENGTH_SHORT).show();
+							break;
+						}
+					}
+				});
+				UmengUpdateAgent.update(getActivity());
+				showProgressDialog(getString(R.string.update_checking));
+
 			} else {
-				// startActivity(menu.intent);
+				try {
+					startActivity(menu.intent);
+				} catch (Exception e) {
+				}
+
 			}
 		}
 	}
@@ -260,11 +302,14 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 			menus = new ArrayList<Menu>();
 			menus.add(new Menu(R.drawable.ic_me_feedback,
-					getString(R.string.menu_feedback), new Intent()));
+					getString(R.string.menu_feedback), new Intent(
+							Intent.ACTION_SENDTO, Uri
+									.parse("mailto:epublicart@gmail.com"))));
 			menus.add(new Menu(R.drawable.ic_me_update,
-					getString(R.string.menu_update), new Intent()));
+					getString(R.string.menu_update), new Intent("update")));
 			menus.add(new Menu(R.drawable.ic_me_about,
-					getString(R.string.menu_about), new Intent()));
+					getString(R.string.menu_about), new Intent(
+							Intent.ACTION_VIEW, Uri.parse("pam://about"))));
 			menuMap.put(sections[1], menus);
 
 			notifyDataSetChanged();

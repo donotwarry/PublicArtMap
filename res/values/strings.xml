@@ -5,7 +5,7 @@
     <string name="msg_loading">正在加载中，请稍候</string>
     <string name="msg_failed">失败</string>
     <string name="msg_submiting">正在提交，请稍候</string>
-    
+
     <!-- explore -->
     <string name="title_explore">公共艺术地图</string>
     <string name="msg_locating">正在定位中...</string>
@@ -15,7 +15,7 @@
     <string name="lab_10km">万公里</string>
     <string name="title_share">分享</string>
     <string name="share_tips">请阅读＃用户服务协议＃，遵守相关约定</string>
-    
+
     <!-- artworkinfo -->
     <string name="artwork_name">作品名称：</string>
     <string name="artwork_author">艺术家：</string>
@@ -30,18 +30,18 @@
     <string name="msg_vote_failed">投票失败</string>
     <string name="msg_share_text">我发现了一个公共艺术作品，特别棒，分享给大家～</string>
     <string name="msg_upload_success">分享成功！</string>
-    
+
     <!-- comment -->
     <string name="title_comment">作品评论</string>
     <string name="msg_loading_comment">正在加载中，请稍候...</string>
     <string name="msg_empty_comment">暂无评论！</string>
     <string name="msg_failed_comment">读取评论失败</string>
     <string name="msg_add_comment_success">评论发表成功！请耐心等待审核！</string>
-    
+
     <!-- barcode -->
     <string name="title_barcode">扫一扫</string>
     <string name="msg_not_found">没有找到作品信息！</string>
-    
+
     <!-- me -->
     <string name="title_me">关于我们</string>
     <string name="section_login">第三方登录</string>
@@ -53,7 +53,11 @@
     <string name="menu_about">关于</string>
     <string name="btn_logout">登出</string>
     <string name="msg_logout">正在登出...</string>
+
+    <!-- about -->
+    <string name="about_content">“公共艺术地图”（ePublicart Map）应用软件旨在建设公共艺术的数字地图，用户通过地图定位、搜索和欣赏世界各地的公共艺术作品和艺术设计空间，同时可以用手机分享自己喜欢的公共艺术作品。“点评”功能的开发让民众成为了自由艺评人，借此抒发自己的真实感受，也可以浏览他人的评论。</string>
     
+    <!-- ssdk -->
     <string name="userid_found">正在登录…</string>
     <string name="logining">使用%s帐号登录中…</string>
     <string name="auth_cancel">授权操作已取消</string>
@@ -62,5 +66,11 @@
     <string name="if_register_needed">如果您需要注册功能…</string>
     <string name="after_auth">一般来说第三方登录时，第三方平台已经为您完成用户身份校验，您可以放心让用户登录。\n\n但如果您需要判断用户是否为新用户，可以在授权操作完成后，将用户的信息通过字段“HashMap userInfo”携带给login方法。客户端通过“String userId”执行登录请求，如果服务端判定此userId为未注册用户，可以将userInfo发送给注册接口，获取用户在此平台上的昵称、头像等数据，然后执行注册</string>
     <string name="ok">确定</string>
+    
+    <!-- umeng -->
+    <string name="update_checking">正在检查更新...</string>
+    <string name="update_no">当前是最新版本，无须更新!</string>
+    <string name="update_no_wifi">没有wifi连接， 只在wifi下更新</string>
+    <string name="update_timeout">超时</string>
 
 </resources>
