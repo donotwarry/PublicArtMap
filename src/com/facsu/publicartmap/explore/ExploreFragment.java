@@ -216,7 +216,8 @@ public class ExploreFragment extends PMMapFragment implements
 			return;
 
 		this.myLoc = new Location(location.getAddrStr(),
-				location.getLatitude(), location.getLongitude());
+				location.getLatitude(), location.getLongitude(),
+				location.getCity());
 		locData.latitude = location.getLatitude();
 		locData.longitude = location.getLongitude();
 		locData.accuracy = location.getRadius();

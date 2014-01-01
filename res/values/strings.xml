@@ -21,9 +21,15 @@
     <string name="artwork_author">艺术家：</string>
     <string name="artwork_time">时间：</string>
     <string name="artwork_intro">作品介绍：</string>
+    <string name="artwork_take_photo">手机拍照</string>
+    <string name="artwork_pick_photo">手机相册</string>
+    <string name="msg_have_no_sdcard">您手机里没有内存卡，无法上传照片</string>
+    <string name="msg_take_photo_first">请先拍摄照片再进行分享！</string>
+    <string name="msg_oom">内存不足，无法显示照片</string>
     <string name="msg_vote_success">投票成功！感谢您对该作品的支持！</string>
     <string name="msg_vote_failed">投票失败</string>
     <string name="msg_share_text">我发现了一个公共艺术作品，特别棒，分享给大家～</string>
+    <string name="msg_upload_success">分享成功！</string>
     
     <!-- comment -->
     <string name="title_comment">作品评论</string>

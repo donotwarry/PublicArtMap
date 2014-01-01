@@ -8,17 +8,20 @@ public class Location implements Parcelable {
 	public String address;
 	public double latitude;
 	public double longitude;
+	public String city;
 	
-	public Location(String address, double latitude, double longitude) {
+	public Location(String address, double latitude, double longitude, String city) {
 		this.address = address;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.city = city;
 	}
 
 	public Location(Parcel in) {
 		address = in.readString();
 		latitude = in.readDouble();
 		longitude = in.readDouble();
+		city = in.readString();
 	}
 
 	@Override
@@ -31,6 +34,7 @@ public class Location implements Parcelable {
 		dest.writeString(address);
 		dest.writeDouble(latitude);
 		dest.writeDouble(longitude);
+		dest.writeString(city);
 	}
 
 	public static final Parcelable.Creator<Location> CREATOR = new Creator<Location>() {
