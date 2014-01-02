@@ -125,7 +125,7 @@ public class ShareArtworkActivity extends PMActivity implements
 		map.put("StartMonth", "");
 		map.put("EndMonth", "");
 		createReq = APIRequest
-				.mapiPost(
+				.mapiPostJson(
 						"http://web358082.dnsvhost.com/ACservice/ACService.svc/CreateArtwork",
 						CreateArtworkResult.class, map);
 		mapiService().exec(createReq, this);
@@ -150,6 +150,7 @@ public class ShareArtworkActivity extends PMActivity implements
 							+ aid + "/" + Environment.userID(),
 					APIRequest.POST, is, CacheType.DISABLED,
 					UploadImageResult.class, null);
+			mapiService().exec(uploadImgReq, this);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
