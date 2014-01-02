@@ -64,9 +64,9 @@
     <TencentWeibo
         Id="2" 
         SortId="2"
-        AppKey="801307650"
-        AppSecret="ae36f4ee3946e1cbb98d6965b0b2ff5c"
-        RedirectUri="http://sharesdk.cn"
+        AppKey="801463616"
+        AppSecret="4a701e2b553c833ec05ce7352849f528"
+        RedirectUri="http://www.alllan.com"
         ShortLinkConversationEnable="true"
         Enable="true" />
 
@@ -81,14 +81,14 @@
     <Wechat
         Id="4"
         SortId="4"
-        AppId="wx4868b35061f87885"
+        AppId="wxd737b72b352cd02b"
         ShortLinkConversationEnable="true"
         Enable="true" />
     
     <WechatMoments
         Id="5"
         SortId="5"
-        AppId="wx4868b35061f87885"
+        AppId="wxd737b72b352cd02b"
         ShortLinkConversationEnable="true"
         Enable="true" />
         

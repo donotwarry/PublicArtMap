@@ -118,6 +118,7 @@ public class ShareArtworkActivity extends PMActivity implements
 		map.put("Longitude", String.valueOf(location.longitude));
 		map.put("Latitude", String.valueOf(location.latitude));
 		map.put("Status", "UA");
+		map.put("Type", "Normal");
 		map.put("ArtistCountry", location.address);
 		map.put("StartYear", "");
 		map.put("EndYear", "");
