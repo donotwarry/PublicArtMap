@@ -1,8 +1,9 @@
 package com.facsu.publicartmap.explore;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -19,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dennytech.common.service.dataservice.mapi.CacheType;
 import com.dennytech.common.service.dataservice.mapi.MApiRequest;
 import com.dennytech.common.service.dataservice.mapi.MApiRequestHandler;
 import com.dennytech.common.service.dataservice.mapi.MApiResponse;
@@ -134,7 +135,7 @@ public class ShareArtworkActivity extends PMActivity implements
 	}
 
 	private void uploadImage(String aid) {
-		if (strImgPath == null) {
+		if (showBitmap == null) {
 			return;
 		}
 
@@ -142,20 +143,42 @@ public class ShareArtworkActivity extends PMActivity implements
 			mapiService().abort(uploadImgReq, this, true);
 		}
 
-		File uploadImg = new File(strImgPath);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("ImageData", bitmapToBase64(showBitmap));
+		map.put("ImageDesc", "");
+		map.put("ImageSource", "");
+		uploadImgReq = APIRequest.mapiPostJson(
+				"http://web358082.dnsvhost.com/ACservice/ACService.svc/UploadImage/"
+						+ aid + "/" + Environment.userID(),
+				UploadImageResult.class, map);
+		mapiService().exec(uploadImgReq, this);
+	}
+
+	public String bitmapToBase64(Bitmap bitmap) {
+		String result = null;
+		ByteArrayOutputStream baos = null;
 		try {
-			FileInputStream is = new FileInputStream(uploadImg);
-			uploadImgReq = new APIRequest(
-					"http://web358082.dnsvhost.com/ACservice/ACService.svc/UploadImage/"
-							+ aid + "/" + Environment.userID(),
-					APIRequest.POST, is, CacheType.DISABLED,
-					UploadImageResult.class, null);
-			mapiService().exec(uploadImgReq, this);
-
-		} catch (FileNotFoundException e) {
+			if (bitmap != null) {
+				baos = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+				baos.flush();
+				baos.close();
+				byte[] bitmapBytes = baos.toByteArray();
+				result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (baos != null) {
+					baos.flush();
+					baos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-
+		return result;
 	}
 
 	@Override
