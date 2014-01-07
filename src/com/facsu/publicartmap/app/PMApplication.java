@@ -2,7 +2,6 @@ package com.facsu.publicartmap.app;
 
 import com.baidu.mapapi.BMapManager;
 import com.dennytech.common.app.CLApplication;
-import com.facsu.publicartmap.common.Environment;
 
 public class PMApplication extends CLApplication {
 	

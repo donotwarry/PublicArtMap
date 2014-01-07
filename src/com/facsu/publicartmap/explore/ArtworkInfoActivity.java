@@ -141,34 +141,18 @@ public class ArtworkInfoActivity extends PMActivity implements
 		final OnekeyShare oks = new OnekeyShare();
 		oks.setNotification(R.drawable.ic_launcher,
 				getString(R.string.app_name));
-		oks.setAddress("12345678901");
-		// oks.setTitle(getString(R.string.evenote_title));
-		// oks.setTitleUrl("http://sharesdk.cn");
+		oks.setTitle(getString(R.string.app_name));
 		oks.setText(content);
-		// oks.setImagePath(MainActivity.TEST_IMAGE);
 		oks.setImageUrl(imgUrl);
-		oks.setUrl("http://www.sharesdk.cn");
-		// oks.setFilePath(MainActivity.TEST_IMAGE);
-		// oks.setComment(menu.getContext().getString(R.string.share));
-		// oks.setSite(getString(R.string.app_name));
-		// oks.setSiteUrl("http://sharesdk.cn");
+		oks.setUrl("http://www.alllan.com");
 		oks.setVenueName(getString(R.string.app_name));
-		// oks.setVenueDescription("This is a beautiful place!");
-		oks.setLatitude(23.056081f);
-		oks.setLongitude(113.385708f);
+		oks.setLatitude((float)location.latitude);
+		oks.setLongitude((float)location.longitude);
+		oks.setAddress(location.address);
 		oks.setSilent(silent);
 		if (platform != null) {
 			oks.setPlatform(platform);
 		}
-
-		// 去除注释，可令编辑页面显示为Dialog模式
-		// oks.setDialogMode();
-
-		// 去除注释，在自动授权时可以禁用SSO方式
-		// oks.disableSSOWhenAuthorize();
-
-		// 去除注释，则快捷分享的操作结果将通过OneKeyShareCallback回调
-		// oks.setCallback(new OneKeyShareCallback());
 		oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
 
 			@Override
@@ -184,21 +168,6 @@ public class ArtworkInfoActivity extends PMActivity implements
 				
 			}
 		});
-
-		// 去除注释，演示在九宫格设置自定义的图标
-		// Bitmap logo = BitmapFactory.decodeResource(menu.getResources(),
-		// R.drawable.ic_launcher);
-		// String label = menu.getResources().getString(R.string.app_name);
-		// OnClickListener listener = new OnClickListener() {
-		// public void onClick(View v) {
-		// String text = "Customer Logo -- ShareSDK " +
-		// ShareSDK.getSDKVersionName();
-		// Toast.makeText(menu.getContext(), text, Toast.LENGTH_SHORT).show();
-		// oks.finish();
-		// }
-		// };
-		// oks.setCustomerLogo(logo, label, listener);
-
 		oks.show(this);
 	}
 
