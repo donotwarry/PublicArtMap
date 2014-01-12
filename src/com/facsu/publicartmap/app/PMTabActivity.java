@@ -3,6 +3,7 @@ package com.facsu.publicartmap.app;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TabHost.TabSpec;
 
 import com.facsu.publicartmap.R;
