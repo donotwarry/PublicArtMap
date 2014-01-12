@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -139,12 +140,13 @@ public class PhotoPicker {
 			Uri uri = data.getData();
 			if (uri != null) {
 				Cursor cursor = null;
+				String[] proj = { MediaStore.Images.Media.DATA };
 				if (mContext != null) {
-					cursor = mContext.getContentResolver().query(uri, null,
+					cursor = mContext.getContentResolver().query(uri, proj,
 							null, null, null);
 				} else if (fragment != null && fragment.getActivity() != null) {
 					cursor = fragment.getActivity().getContentResolver()
-							.query(uri, null, null, null, null);
+							.query(uri, proj, null, null, null);
 				}
 
 				if (cursor == null)
@@ -153,7 +155,7 @@ public class PhotoPicker {
 				try {
 					cursor.moveToFirst();
 					path = cursor.getString(cursor
-							.getColumnIndex(MediaStore.MediaColumns.DATA));
+							.getColumnIndex(MediaStore.Images.Media.DATA));
 				} catch (Exception e) {
 					Toast.makeText(mContext, "请换一个文件夹试试！", Toast.LENGTH_SHORT)
 							.show();
@@ -191,8 +193,14 @@ public class PhotoPicker {
 	}
 
 	protected Intent getPhotoPickIntent() {
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+		Intent intent = new Intent();
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		intent.setType("image/*");
+		if (Build.VERSION.SDK_INT < 19) {
+			intent.setAction(Intent.ACTION_GET_CONTENT);
+		} else {
+			intent.setAction("android.intent.action.OPEN_DOCUMENT");
+		}
 		intent.putExtra("crop", "true");
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);

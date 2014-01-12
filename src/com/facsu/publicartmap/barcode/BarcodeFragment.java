@@ -92,6 +92,17 @@ public class BarcodeFragment extends BarCodeScannerFragment implements
 		dismissDialog();
 		if (resp.result() instanceof GetArtworksBySNResult) {
 			GetArtworksBySNResult result = (GetArtworksBySNResult) resp.result();
+			if (result.GetArtworksBySNResult == null || result.GetArtworksBySNResult.length == 0) {
+				showDialog(getString(R.string.app_name),
+						getString(R.string.msg_not_found), new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								startScan();
+							}
+						});
+				return;
+			}
 			Intent intent = new Intent(Intent.ACTION_VIEW,
 					Uri.parse("pam://artworkinfo"));
 			if (result.result() != null && result.result().length > 0) {
