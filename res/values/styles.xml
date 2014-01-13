@@ -20,5 +20,72 @@
     <style name="CustomWindowTitleBackground">
         <item name="android:background">@color/title_bg</item>
     </style>
+    
+    <style name="content_page_small_text">
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">@color/text_color_selector</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
 
+    <!-- DPTableView -->
+    <style name="DPTableView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginBottom">10dip</item>
+        <item name="android:layout_marginLeft">10dip</item>
+        <item name="android:layout_marginRight">10dip</item>
+        <item name="android:background">@drawable/background_view_rounded_container</item>
+    </style>
+
+    <style name="my_round_item_bg">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/my_round_item_bg_whole</item>
+    </style>
+
+    <style name="my_round_item_bg_left_top">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/my_round_item_bg_left_top</item>
+    </style>
+
+    <style name="my_round_item_bg_left_bottom">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/my_round_item_bg_left_bottom</item>
+    </style>
+
+    <style name="my_round_item_bg_right_top">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/my_round_item_bg_right_top</item>
+    </style>
+
+    <style name="my_round_item_bg_right_bottom">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/my_round_item_bg_right_bottom</item>
+    </style>
+
+    <style name="my_round_item_bg_left">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/my_round_item_bg_left</item>
+    </style>
+
+    <style name="my_round_item_bg_right">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/my_round_item_bg_right</item>
+    </style>
 </resources>

@@ -8,5 +8,54 @@
         <attr name="placeholderLoading" format="reference" />
         <attr name="placeholderError" format="reference" />
     </declare-styleable>
+    
+    <declare-styleable name="DPBasicItem">
+        <attr name="title" format="string" />
+        <attr name="subTitle" format="string" />
+        <attr name="input" format="string" />
+        <attr name="input_hint" format="string" />
+        <attr name="input_type" format="integer">
+            <flag name="text" value="0x01" />
+            <flag name="password" value="0x80" />
+            <flag name="number" value="0x02" />
+            <flag name="phone" value="0x03" />
+            <flag name="email" value="0x20" />
+        </attr>
+        <attr name="input_maxLength" format="integer" />
+        <attr name="count" format="string" />
+        <attr name="checked" format="integer">
+            <enum name="check" value="1" />
+            <enum name="uncheck" value="2" />
+        </attr>
+        <attr name="clickable" format="boolean" />
+        <attr name="title_textType" format="integer">
+            <flag name="small" value="0x01" />
+            <flag name="yellow_color" value="0x02" />
+            <flag name="gray_color" value="0x04" />
+            <flag name="black_color" value="0x08" />
+            <flag name="bold" value="0x10" />
+        </attr>
+        <attr name="subTitle_textType" format="integer">
+            <flag name="small" value="0x01" />
+            <flag name="yellow_color" value="0x02" />
+            <flag name="gray_color" value="0x04" />
+            <flag name="black_color" value="0x08" />
+            <flag name="bold" value="0x10" />
+        </attr>
+        <attr name="count_textType" format="integer">
+            <flag name="small" value="0x01" />
+            <flag name="yellow_color" value="0x02" />
+            <flag name="gray_color" value="0x04" />
+            <flag name="black_color" value="0x08" />
+            <flag name="bold" value="0x10" />
+        </attr>
+        <attr name="input_textType" format="integer">
+            <flag name="small" value="0x01" />
+            <flag name="yellow_color" value="0x02" />
+            <flag name="gray_color" value="0x04" />
+            <flag name="black_color" value="0x08" />
+            <flag name="bold" value="0x10" />
+        </attr>
+    </declare-styleable>
 
 </resources>

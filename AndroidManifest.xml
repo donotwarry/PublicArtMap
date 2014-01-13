@@ -192,6 +192,23 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
+        
+        <activity android:name="com.facsu.publicartmap.login.LoginTabActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="login"
+                    android:scheme="pam" />
+                
+                <data
+                    android:host="register"
+                    android:scheme="pam" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

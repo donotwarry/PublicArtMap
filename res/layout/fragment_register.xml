@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dp="http://schemas.android.com/apk/res/com.facsu.publicartmap"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.facsu.publicartmap.widget.DPTableView
+        style="@style/DPTableView"
+        android:layout_marginTop="20dp" >
+
+        <com.facsu.publicartmap.widget.DPBasicItem
+            android:id="@+id/register_username"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            dp:input_hint="@string/hint_username" />
+
+        <com.facsu.publicartmap.widget.DPBasicItem
+            android:id="@+id/register_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            dp:input_hint="@string/hint_password"
+            dp:input_type="password" />
+        
+        <com.facsu.publicartmap.widget.DPBasicItem
+            android:id="@+id/register_password_re"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            dp:input_hint="@string/hint_password_re"
+            dp:input_type="password" />
+    </com.facsu.publicartmap.widget.DPTableView>
+
+    <ImageView
+        android:id="@+id/register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_register" />
+
+</LinearLayout>

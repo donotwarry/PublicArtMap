@@ -5,10 +5,26 @@
     <color name="title_bg">#ef5d4a</color>
     <color name="green">#00CD00</color>
     <color name="red">#EE4000</color>
+    <color name="yellow">#ff7000</color>
     <color name="light_red">#44ef5d4a</color>
     <color name="gray">#EBEBEB</color>
+    <color name="deep_gray">#5a5a5a</color>
+    <color name="light_gray">#979797</color>  
     <color name="text_gray">#ababab</color>
     <color name="text_deep_gray">#99000000</color>
     <color name="text_blue">#3A5FCD</color>
+    
+    <color name="text_color_default">#000000</color>
+    <color name="text_color_pressed">#ffffff</color>
+    
+    <color name="base_start_color_default">#FFFFFF</color>
+    <color name="base_end_color_default">#FFFFFF</color>
+	<color name="base_start_color_pressed">#FFff7a13</color>
+	<color name="base_center_color_pressed">#FFff8c2f</color>
+    <color name="base_end_color_pressed">#FFffa254</color>
+    <color name="rounded_container_border">#ffb7babb</color>
+    
+    <color name="item_click_top">#FFF29202</color>
+    <color name="item_click_bottom">#FFE69306</color>
 
 </resources>

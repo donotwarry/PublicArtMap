@@ -55,6 +55,12 @@
     <string name="menu_about">关于</string>
     <string name="btn_logout">登出</string>
     <string name="msg_logout">正在登出...</string>
+    <string name="hint_username">用户名/邮箱地址/手机号</string>
+    <string name="hint_password">密码</string>
+    <string name="hint_password_re">密码确认</string>
+    <string name="login_sinaweibo">新浪微博登录</string>
+    <string name="login_qqweibo">腾讯微博登录</string>
+    <string name="login_qq">QQ登录</string>
 
     <!-- about -->
     <string name="about_content">“公共艺术地图”（ePublicart Map）应用软件旨在建设公共艺术的数字地图，用户通过地图定位、搜索和欣赏世界各地的公共艺术作品和艺术设计空间，同时可以用手机分享自己喜欢的公共艺术作品。“点评”功能的开发让民众成为了自由艺评人，借此抒发自己的真实感受，也可以浏览他人的评论。</string>

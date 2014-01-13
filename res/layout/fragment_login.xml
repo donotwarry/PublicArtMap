@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dp="http://schemas.android.com/apk/res/com.facsu.publicartmap"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.facsu.publicartmap.widget.DPTableView
+        style="@style/DPTableView"
+        android:layout_marginTop="20dp" >
+
+        <com.facsu.publicartmap.widget.DPBasicItem
+            android:id="@+id/login_username"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            dp:input_hint="@string/hint_username" />
+
+        <com.facsu.publicartmap.widget.DPBasicItem
+            android:id="@+id/login_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            dp:input_hint="@string/hint_password"
+            dp:input_type="password" />
+    </com.facsu.publicartmap.widget.DPTableView>
+
+    <ImageView
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_login" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" >
+
+        <LinearLayout
+            android:id="@+id/login_by_sinaweibo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/logo_sinaweibo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_sinaweibo" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/login_by_qq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/logo_qq" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_qq"
+                android:textColor="@color/deep_gray" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/login_by_qqweibo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/logo_tencentweibo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_qqweibo"
+                android:textColor="@color/deep_gray" />
+        </LinearLayout>
+        
+    </LinearLayout>
+
+</LinearLayout>

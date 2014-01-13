@@ -309,7 +309,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 					getString(R.string.menu_update), new Intent("update")));
 			menus.add(new Menu(R.drawable.ic_me_about,
 					getString(R.string.menu_about), new Intent(
-							Intent.ACTION_VIEW, Uri.parse("pam://about"))));
+							Intent.ACTION_VIEW, Uri.parse("pam://login")))); // about
 			menuMap.put(sections[1], menus);
 
 			notifyDataSetChanged();
