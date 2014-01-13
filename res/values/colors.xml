@@ -9,5 +9,6 @@
     <color name="gray">#EBEBEB</color>
     <color name="text_gray">#ababab</color>
     <color name="text_deep_gray">#99000000</color>
+    <color name="text_blue">#3A5FCD</color>
 
 </resources>

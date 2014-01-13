@@ -40,7 +40,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/share_tips" />
+            android:text="@string/share_tips_1" />
+        
+        <TextView
+            android:id="@+id/agreenment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/share_tips_2"
+            android:textColor="@color/text_blue" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/share_tips_3" />
     </LinearLayout>
 
     <TextView

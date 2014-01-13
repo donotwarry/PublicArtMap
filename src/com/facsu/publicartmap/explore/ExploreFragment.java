@@ -146,7 +146,9 @@ public class ExploreFragment extends PMMapFragment implements
 		if (request != null) {
 			mapiService().abort(request, this, true);
 		}
-		locClient.stop();
+		if (locClient != null) {
+			locClient.stop();
+		}
 		super.onDestroy();
 	}
 

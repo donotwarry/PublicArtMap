@@ -73,7 +73,7 @@ public class PMActivity extends CLActivity {
 	@Override
 	public void setTitle(CharSequence title) {
 		super.setTitle(title);
-		titleBar.setTitle(title.toString());
+		titleBar.setTitle(title == null ? "" : title.toString());
 	}
 
 	public void setLeftButton(int resId, OnClickListener listener) {

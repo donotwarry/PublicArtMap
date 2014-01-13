@@ -36,7 +36,7 @@ public class CommentActivity extends PMActivity implements MApiRequestHandler {
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_comment);
 		setTitle(getString(R.string.title_comment));
-		setRightButton(R.drawable.title_add, new OnClickListener() {
+		setRightButton(R.drawable.title_comment, new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

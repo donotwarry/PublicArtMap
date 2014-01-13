@@ -24,6 +24,7 @@ public class AddCommentActivity extends PMActivity implements
 
 	private TextView addressTv;
 	private EditText input;
+	private View agreenment;
 
 	private Location location;
 	private String artworkID;
@@ -40,6 +41,15 @@ public class AddCommentActivity extends PMActivity implements
 		addressTv = (TextView) findViewById(R.id.share_location);
 		addressTv.setText(location.address);
 		input = (EditText) findViewById(R.id.input);
+		agreenment = findViewById(R.id.agreenment);
+		agreenment.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showDialog(getString(R.string.app_name),
+						getString(R.string.agreement), null);
+			}
+		});
 		setRightButton(R.drawable.title_send, new OnClickListener() {
 
 			@Override
