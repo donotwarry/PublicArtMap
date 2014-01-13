@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -57,8 +60,13 @@ public class ShareArtworkActivity extends PMActivity implements
 	private PhotoPicker photoPicker = new PhotoPicker(this) {
 		protected Intent getPhotoPickIntent() {
 			Intent intent = new Intent();
+			intent.addCategory(Intent.CATEGORY_OPENABLE);
 			intent.setType("image/*");
-			intent.setAction(Intent.ACTION_GET_CONTENT);
+			if (Build.VERSION.SDK_INT < 19) {
+				intent.setAction(Intent.ACTION_GET_CONTENT);
+			} else {
+				intent.setAction("android.intent.action.OPEN_DOCUMENT");
+			}
 			return intent;
 		};
 	};
@@ -107,7 +115,7 @@ public class ShareArtworkActivity extends PMActivity implements
 	}
 
 	private void createArtwork() {
-		if (strImgPath == null) {
+		if (showBitmap == null) {
 			showDialog(getString(R.string.app_name),
 					getString(R.string.msg_take_photo_first), null);
 			return;
@@ -257,9 +265,15 @@ public class ShareArtworkActivity extends PMActivity implements
 				}
 				break;
 			case PhotoPicker.REQUEST_CODE_PHOTO_PICKED:
-				strImgPath = photoPicker.parseImgPath(data);
-				if (!TextUtils.isEmpty(strImgPath)) {
-					sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
+				if (Build.VERSION.SDK_INT < 19) {
+					strImgPath = photoPicker.parseImgPath(data);
+					if (!TextUtils.isEmpty(strImgPath)) {
+						sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
+					}
+				} else {
+					if (data != null) {
+						sharePhoto.setImageBitmap(parseThumbnail(data.getData()));
+					}
 				}
 				break;
 			}
@@ -295,6 +309,51 @@ public class ShareArtworkActivity extends PMActivity implements
 		for (; sampling <= 8 && showBitmap == null; sampling *= 2) {
 			try {
 				FileInputStream ins = new FileInputStream(file);
+				Options opt = new Options();
+				opt.inSampleSize = sampling;
+				showBitmap = BitmapFactory.decodeStream(ins, null, opt);
+				ins.close();
+			} catch (OutOfMemoryError oom) {
+				System.gc();
+				Toast.makeText(this, getString(R.string.msg_oom),
+						Toast.LENGTH_LONG).show();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		return showBitmap;
+	}
+	
+	private Bitmap parseThumbnail(Uri data) {
+        System.gc();
+		int sampling = 1;
+		try {
+			InputStream ins = getContentResolver().openInputStream(data);
+			Options opt = new Options();
+			opt.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(ins, null, opt);
+			ins.close();
+
+			int size = opt.outWidth > opt.outHeight ? opt.outWidth
+					: opt.outHeight;
+			if (size < 1400)
+				sampling = 1;
+			else if (size < 2800)
+				sampling = 2;
+			else
+				sampling = 4;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		showBitmap = null;
+
+		for (; sampling <= 8 && showBitmap == null; sampling *= 2) {
+			try {
+				InputStream ins = getContentResolver().openInputStream(data);
 				Options opt = new Options();
 				opt.inSampleSize = sampling;
 				showBitmap = BitmapFactory.decodeStream(ins, null, opt);
