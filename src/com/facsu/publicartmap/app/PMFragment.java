@@ -1,11 +1,14 @@
 package com.facsu.publicartmap.app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -135,5 +138,48 @@ public class PMFragment extends CLFragment {
 					Context.MODE_PRIVATE);
 		}
 		return sharePref;
+	}
+	
+	//
+	// login & register
+	//
+	
+	public static final int REQUEST_CODE_LOGIN = 1001;
+
+	public void gotoLogin() {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("pam://login"));
+		startActivityForResult(intent, REQUEST_CODE_LOGIN);
+	}
+	
+	public void gotoRegister() {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("pam://register"));
+		startActivityForResult(intent, REQUEST_CODE_LOGIN);
+	}
+	
+	public void onLoginSuccess() {
+		// sub class implement
+	}
+	
+	public void onLoginFailed() {
+		// sub class implement
+	}
+	
+	public void onLoginCancel() {
+		// sub class implement
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_CODE_LOGIN) {
+			if (resultCode == Activity.RESULT_OK) {
+				onLoginSuccess();
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				onLoginCancel();
+			} else {
+				onLoginFailed();
+			}
+			
+		}
 	}
 }
