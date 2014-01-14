@@ -27,7 +27,7 @@ public class MainActivity extends PMTabActivity {
 		}
 		
 		ShareSDK.initSDK(this);
-		Environment.setUserID(preferences().getString("uid", null));
+		Environment.setUserID(preferences().getInt("uid", -1));
 		
 		UmengUpdateAgent.update(this);
 	}

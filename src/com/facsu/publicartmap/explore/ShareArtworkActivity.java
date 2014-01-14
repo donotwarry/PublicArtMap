@@ -128,7 +128,7 @@ public class ShareArtworkActivity extends PMActivity implements
 			mapiService().abort(uploadImgReq, this, true);
 		}
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ArtworkName", "我的上传");
 		map.put("ArtworkDesc", input.getText().toString().trim());
 		map.put("SubmitterID", Environment.userID());

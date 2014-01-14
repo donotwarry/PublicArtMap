@@ -327,9 +327,10 @@ public class ArtworkInfoActivity extends PMActivity implements
 		} else if (req == createUserReq) {
 			if (resp.result() instanceof CreateUserResult) {
 				CreateUserResult result = (CreateUserResult) resp.result();
-				preferences().edit().putString("uid",
-						result.CreateUserResult.ID);
-				Environment.setUserID(result.CreateUserResult.ID);
+				int uid = Integer.valueOf(result.CreateUserResult.ID);
+				preferences().edit().putInt("uid", uid)
+						.commit();
+				Environment.setUserID(uid);
 			}
 		}
 	}

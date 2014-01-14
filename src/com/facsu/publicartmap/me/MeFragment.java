@@ -6,10 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.AlertDialog.Builder;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler.Callback;
@@ -30,14 +27,10 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 
 import com.dennytech.common.adapter.BasicAdapter;
-import com.dennytech.common.service.dataservice.mapi.MApiRequest;
-import com.dennytech.common.service.dataservice.mapi.MApiRequestHandler;
-import com.dennytech.common.service.dataservice.mapi.MApiResponse;
 import com.dennytech.common.util.Log;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMFragment;
-import com.facsu.publicartmap.bean.CreateUserResult;
-import com.facsu.publicartmap.common.APIRequest;
+import com.facsu.publicartmap.bean.User;
 import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.widget.NetworkThumbView;
 import com.umeng.update.UmengUpdateAgent;
@@ -46,7 +39,7 @@ import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 
 public class MeFragment extends PMFragment implements OnItemClickListener,
-		MApiRequestHandler, PlatformActionListener, Callback {
+		PlatformActionListener, Callback {
 
 	private static final int MSG_USERID_FOUND = 1;
 	private static final int MSG_LOGIN = 2;
@@ -57,24 +50,8 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 	private ListView list;
 	private Adapter adapter;
 
-	private MApiRequest request;
-
 	private Platform xlPlatform;
 	private Platform tcPlatform;
-
-	private static final String ACTION_REFRESH_USER = "action_referesh_user";
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String name = intent.getStringExtra("username");
-			String password = intent.getStringExtra("password");
-			String avatarurl = intent.getStringExtra("avatarurl");
-			String signature = intent.getStringExtra("signature");
-			requestUser(name, password, avatarurl, signature);
-		}
-
-	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,9 +61,6 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		adapter = new Adapter();
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
-
-		IntentFilter filter = new IntentFilter(ACTION_REFRESH_USER);
-		getActivity().registerReceiver(receiver, filter);
 
 		return v;
 	}
@@ -100,8 +74,6 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		if (weibo.isValid()) {
 			String userId = weibo.getDb().getUserId();
 			if (userId != null) {
-				login(weibo.getName(), userId, weibo.getDb().getUserName(),
-						weibo.getDb().getUserIcon(), null);
 				this.xlPlatform = weibo;
 				adapter.reset();
 			}
@@ -111,8 +83,6 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		if (tcweibo.isValid()) {
 			String userId = tcweibo.getDb().getUserId();
 			if (userId != null) {
-				login(tcweibo.getName(), userId, tcweibo.getDb().getUserName(),
-						tcweibo.getDb().getUserIcon(), null);
 				this.tcPlatform = tcweibo;
 				adapter.reset();
 			}
@@ -126,36 +96,14 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 	}
 
 	@Override
-	public void onDestroy() {
-		if (request != null) {
-			mapiService().abort(request, this, true);
-		}
-		getActivity().unregisterReceiver(receiver);
-		super.onDestroy();
-	}
-
-	private void requestUser(String un, String pw, String au, String s) {
-		if (request != null) {
-			mapiService().abort(request, MeFragment.this, true);
-		}
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("UserName", un);
-		map.put("Password", pw);
-		map.put("AvatarUrl", au);
-		map.put("Signature", s);
-		request = APIRequest
-				.mapiPostJson(
-						"http://web358082.dnsvhost.com/ACservice/ACService.svc/CreateUser",
-						CreateUserResult.class, map);
-		mapiService().exec(request, MeFragment.this);
-	}
-
-	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Object item = arg0.getItemAtPosition(arg2);
 		if (item instanceof Menu) {
 			Menu menu = (Menu) item;
-			if ("weibo".equals(menu.intent.getAction())) {
+			if ("login".equals(menu.intent.getAction())) {
+				gotoLogin(null);
+
+			} else if ("weibo".equals(menu.intent.getAction())) {
 				authorize(new SinaWeibo(getActivity()), xlPlatform);
 			} else if ("tcweibo".equals(menu.intent.getAction())) {
 				authorize(new TencentWeibo(getActivity()), tcPlatform);
@@ -204,6 +152,11 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		}
 	}
 
+	@Override
+	public void onLoginSuccess() {
+		adapter.reset();
+	}
+
 	private void authorize(Platform plat, Platform save) {
 		if (plat == null) {
 			return;
@@ -213,8 +166,6 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			String userId = plat.getDb().getUserId();
 			if (userId != null) {
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
-				login(plat.getName(), userId, plat.getDb().getUserName(), plat
-						.getDb().getUserIcon(), null);
 				save = plat;
 				return;
 			}
@@ -222,16 +173,6 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		plat.setPlatformActionListener(this);
 		plat.SSOSetting(true);
 		plat.showUser(null);
-	}
-
-	private void login(String plat, String userId, String userName,
-			String userIcon, HashMap<String, Object> userInfo) {
-		// Message msg = new Message();
-		// msg.what = MSG_LOGIN;
-		// msg.obj = plat;
-		// UIHandler.sendMessage(msg, this);
-
-		requestUser(userName, "", userIcon, "暂无");
 	}
 
 	public boolean handleMessage(Message msg) {
@@ -274,6 +215,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 	class Adapter extends BasicAdapter {
 
 		String[] sections = { getString(R.string.section_login),
+				getString(R.string.section_bind),
 				getString(R.string.section_info) };
 		Map<String, List<Menu>> menuMap = new HashMap<String, List<Menu>>();
 
@@ -285,6 +227,18 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			menuMap.clear();
 
 			List<Menu> menus = new ArrayList<Menu>();
+			Menu loginMenu = new Menu(0, getString(R.string.menu_login),
+					new Intent("login"));
+			User user = User.read(preferences());
+			if (user != null) {
+				loginMenu.iconUrl = user.AvatarUrl == null ? ""
+						: user.AvatarUrl;
+				loginMenu.title = user.UserName;
+			}
+			menus.add(loginMenu);
+			menuMap.put(sections[0], menus);
+
+			menus = new ArrayList<Menu>();
 			Menu weiboMenu = new Menu(R.drawable.ic_me_weibo,
 					getString(R.string.menu_weibo_login), new Intent("weibo"));
 			if (xlPlatform != null) {
@@ -300,7 +254,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				tcweiboMenu.title = tcPlatform.getDb().getUserName();
 			}
 			menus.add(tcweiboMenu);
-			menuMap.put(sections[0], menus);
+			menuMap.put(sections[1], menus);
 
 			menus = new ArrayList<Menu>();
 			menus.add(new Menu(R.drawable.ic_me_feedback,
@@ -311,8 +265,8 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 					getString(R.string.menu_update), new Intent("update")));
 			menus.add(new Menu(R.drawable.ic_me_about,
 					getString(R.string.menu_about), new Intent(
-							Intent.ACTION_VIEW, Uri.parse("pam://login")))); // about
-			menuMap.put(sections[1], menus);
+							Intent.ACTION_VIEW, Uri.parse("pam://about")))); // about
+			menuMap.put(sections[2], menus);
 
 			notifyDataSetChanged();
 		}
@@ -382,7 +336,12 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 						@Override
 						public void onClick(View v) {
 							if (((Menu) item).intent.getAction()
-									.equals("weibo")) {
+									.equals("login")) {
+								User.remove(preferences());
+								Adapter.this.reset();
+
+							} else if (((Menu) item).intent.getAction().equals(
+									"weibo")) {
 								xlPlatform.removeAccount();
 								xlPlatform = null;
 							} else {
@@ -417,30 +376,6 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 	}
 
 	@Override
-	public void onRequestStart(MApiRequest req) {
-	}
-
-	@Override
-	public void onRequestProgress(MApiRequest req, int count, int total) {
-	}
-
-	@Override
-	public void onRequestFinish(MApiRequest req, MApiResponse resp) {
-		if (resp.result() instanceof CreateUserResult) {
-			CreateUserResult result = (CreateUserResult) resp.result();
-			preferences().edit().putString("uid", result.CreateUserResult.ID)
-					.commit();
-			Environment.setUserID(result.CreateUserResult.ID);
-			adapter.reset();
-		}
-	}
-
-	@Override
-	public void onRequestFailed(MApiRequest req, MApiResponse resp) {
-
-	}
-
-	@Override
 	public void onCancel(Platform arg0, int arg1) {
 	}
 
@@ -454,8 +389,14 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			String userId = plat.getDb().getUserId();
 			if (userId != null) {
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
-				login(plat.getName(), userId, plat.getDb().getUserName(), plat
-						.getDb().getUserIcon(), null);
+				if (plat instanceof SinaWeibo) {
+					Environment.saveSinaAvatar(preferences(), plat.getDb()
+							.getUserName(), plat.getDb().getUserIcon());
+
+				} else if (plat instanceof TencentWeibo) {
+					Environment.saveQQWeiboAvatar(preferences(), plat.getDb()
+							.getUserName(), plat.getDb().getUserIcon());
+				}
 				this.xlPlatform = plat;
 			}
 		}

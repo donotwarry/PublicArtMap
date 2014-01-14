@@ -325,7 +325,7 @@ public class DPBasicItem extends LinearLayout {
 	}
 
 	public String getInputText() {
-		return input;
+		return input = itemInput.getText().toString();
 	}
 
 	public void setInputText(String inputText) {

@@ -129,45 +129,47 @@ public class PMFragment extends CLFragment {
 		}
 		managedDialog = null;
 	}
-	
+
 	private SharedPreferences sharePref;
 
 	public SharedPreferences preferences() {
 		if (sharePref == null) {
-			sharePref = getActivity().getSharedPreferences(getActivity().getPackageName(),
-					Context.MODE_PRIVATE);
+			sharePref = getActivity().getSharedPreferences(
+					getActivity().getPackageName(), Context.MODE_PRIVATE);
 		}
 		return sharePref;
 	}
-	
+
 	//
 	// login & register
 	//
-	
+
 	public static final int REQUEST_CODE_LOGIN = 1001;
 
-	public void gotoLogin() {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("pam://login"));
+	public void gotoLogin(String path) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("pam://login?"
+				+ (path == null ? "" : path)));
 		startActivityForResult(intent, REQUEST_CODE_LOGIN);
 	}
-	
-	public void gotoRegister() {
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("pam://register"));
+
+	public void gotoRegister(String path) {
+		Intent intent = new Intent(Intent.ACTION_VIEW,
+				Uri.parse("pam://register?" + (path == null ? "" : path)));
 		startActivityForResult(intent, REQUEST_CODE_LOGIN);
 	}
-	
+
 	public void onLoginSuccess() {
 		// sub class implement
 	}
-	
+
 	public void onLoginFailed() {
 		// sub class implement
 	}
-	
+
 	public void onLoginCancel() {
 		// sub class implement
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -179,7 +181,7 @@ public class PMFragment extends CLFragment {
 			} else {
 				onLoginFailed();
 			}
-			
+
 		}
 	}
 }

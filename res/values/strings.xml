@@ -46,25 +46,33 @@
 
     <!-- me -->
     <string name="title_me">关于我们</string>
-    <string name="section_login">第三方登录</string>
+    <string name="section_login">个人帐户</string>
+    <string name="section_bind">分享设置</string>
     <string name="section_info">产品信息</string>
     <string name="menu_weibo_login">绑定新浪微博</string>
     <string name="menu_txweibo_login">绑定腾讯微博</string>
-    <string name="menu_feedback">意见反馈</string>
+    <string name="menu_login">点击登录</string>
+    <string name="menu_feedback">用户反馈</string>
     <string name="menu_update">检查更新</string>
     <string name="menu_about">关于</string>
     <string name="btn_logout">登出</string>
     <string name="msg_logout">正在登出...</string>
+
+    <!-- login -->
     <string name="hint_username">用户名/邮箱地址/手机号</string>
     <string name="hint_password">密码</string>
     <string name="hint_password_re">密码确认</string>
     <string name="login_sinaweibo">新浪微博登录</string>
     <string name="login_qqweibo">腾讯微博登录</string>
     <string name="login_qq">QQ登录</string>
+    <string name="msg_logining">正在登录，请稍候...</string>
+    <string name="msg_username_not_null">用户名不能为空.</string>
+    <string name="msg_password_not_null">密码不能为空.</string>
+    <string name="msg_password_not_same">密码不一致</string>
 
     <!-- about -->
     <string name="about_content">“公共艺术地图”（ePublicart Map）应用软件旨在建设公共艺术的数字地图，用户通过地图定位、搜索和欣赏世界各地的公共艺术作品和艺术设计空间，同时可以用手机分享自己喜欢的公共艺术作品。“点评”功能的开发让民众成为了自由艺评人，借此抒发自己的真实感受，也可以浏览他人的评论。</string>
-    
+
     <!-- ssdk -->
     <string name="userid_found">正在登录…</string>
     <string name="logining">使用%s帐号登录中…</string>
@@ -74,13 +82,12 @@
     <string name="if_register_needed">如果您需要注册功能…</string>
     <string name="after_auth">一般来说第三方登录时，第三方平台已经为您完成用户身份校验，您可以放心让用户登录。\n\n但如果您需要判断用户是否为新用户，可以在授权操作完成后，将用户的信息通过字段“HashMap userInfo”携带给login方法。客户端通过“String userId”执行登录请求，如果服务端判定此userId为未注册用户，可以将userInfo发送给注册接口，获取用户在此平台上的昵称、头像等数据，然后执行注册</string>
     <string name="ok">确定</string>
-    
+
     <!-- umeng -->
     <string name="update_checking">正在检查更新...</string>
     <string name="update_no">当前是最新版本，无须更新!</string>
     <string name="update_no_wifi">没有wifi连接， 只在wifi下更新</string>
     <string name="update_timeout">超时</string>
-    
     <string name="agreement">重要须知：
 
     本协议是您（个人或单一实体）与本应用的开发者之间关于开发者向您提供本应用所涉相关服务的法律协议。在此特别提醒，用户（您）欲使用相关服务，必须事先认真阅读本服务条款中各条款，包括免除或者限制开发者责任的免责条款及对用户的权利限制。请您审阅并接受或不接受本服务条款（未成年人审阅时应得到法定监护人的陪同）。本服务条款一旦发生变更, 将在开发者网站主页上公布修改内容。修改后的服务条款一旦在网站主页上公布即有效代替原来的服务条款。 
@@ -176,7 +183,6 @@
     C. 司法机关或行政机关基于法定程序要求开发者提供的； 
     D.开发者为了维护自己合法权益而向用户提起诉讼或者仲裁时； 
     E.应用户监护人的合法要求而提供用户个人身份信息时。 
-    16.本服务条款的解释，效力及纠纷的解决，适用于中华人民共和国大陆法律。若发生任何纠纷或争议，应当友好协商解决，协商不成的，均应提交北京市海淀区人民法院解决。
-    </string>
+    16.本服务条款的解释，效力及纠纷的解决，适用于中华人民共和国大陆法律。若发生任何纠纷或争议，应当友好协商解决，协商不成的，均应提交北京市海淀区人民法院解决。</string>
 
 </resources>

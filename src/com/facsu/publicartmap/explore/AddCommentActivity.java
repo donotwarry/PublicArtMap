@@ -60,11 +60,11 @@ public class AddCommentActivity extends PMActivity implements
 		});
 	}
 
-	private void requestAddComment(String content, String uid, String aid) {
+	private void requestAddComment(String content, int uid, String aid) {
 		if (request != null) {
 			mapiService().abort(request, this, true);
 		}
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("UserID", uid);
 		map.put("ArtworkID", aid);
 		map.put("Content", content);
