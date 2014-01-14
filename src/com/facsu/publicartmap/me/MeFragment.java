@@ -33,6 +33,7 @@ import com.dennytech.common.adapter.BasicAdapter;
 import com.dennytech.common.service.dataservice.mapi.MApiRequest;
 import com.dennytech.common.service.dataservice.mapi.MApiRequestHandler;
 import com.dennytech.common.service.dataservice.mapi.MApiResponse;
+import com.dennytech.common.util.Log;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMFragment;
 import com.facsu.publicartmap.bean.CreateUserResult;
@@ -196,6 +197,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				try {
 					startActivity(menu.intent);
 				} catch (Exception e) {
+					Log.e(getTag(), "start activity failed", e);
 				}
 
 			}
