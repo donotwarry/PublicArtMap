@@ -54,6 +54,7 @@ public class ExploreFragment extends PMMapFragment implements
 	private MyOverlay resultOverlay;
 	private PopupOverlay pop;
 	private PopupView popView;
+	private View progress;
 
 	boolean isRequest = false;
 	boolean isFirstLoc = true;
@@ -73,6 +74,7 @@ public class ExploreFragment extends PMMapFragment implements
 		if (parent != null) {
 			parent.removeView(rootView);
 		}
+		progress = rootView.findViewById(R.id.progressbar);
 		return rootView;
 	}
 
@@ -188,6 +190,7 @@ public class ExploreFragment extends PMMapFragment implements
 	}
 
 	private void loadData(double lat, double lng, int rangeKM) {
+		progress.setVisibility(View.VISIBLE);
 		if (request != null) {
 			mapiService().abort(request, this, true);
 		}
@@ -288,17 +291,18 @@ public class ExploreFragment extends PMMapFragment implements
 
 	@Override
 	public void onRequestFailed(MApiRequest req, MApiResponse resp) {
+		progress.setVisibility(View.GONE);
+		Toast.makeText(getActivity(), resp.message().getErrorMsg(), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onRequestFinish(MApiRequest req, MApiResponse resp) {
+		progress.setVisibility(View.GONE);
 		if (resp.result() instanceof GetArtworksByGPSResult) {
 			GetArtworksByGPSResult result = (GetArtworksByGPSResult) resp
 					.result();
 			data = result.result();
 			showData();
-			Toast.makeText(getActivity(), "success " + result.result().length,
-					Toast.LENGTH_SHORT).show();
 		}
 	}
 
