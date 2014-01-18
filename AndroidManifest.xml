@@ -83,7 +83,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.facsu.publicartmap.SplashActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -92,7 +93,8 @@
         </activity>
         <activity
             android:name="com.facsu.publicartmap.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -104,7 +106,9 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        <activity android:name="com.facsu.publicartmap.explore.ArtworkInfoActivity" >
+        <activity
+            android:name="com.facsu.publicartmap.explore.ArtworkInfoActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -116,7 +120,9 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        <activity android:name="com.facsu.publicartmap.explore.PhotoPagerActivity" >
+        <activity
+            android:name="com.facsu.publicartmap.explore.PhotoPagerActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -130,6 +136,7 @@
         </activity>
         <activity
             android:name="com.facsu.publicartmap.explore.ShareArtworkActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -142,7 +149,9 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        <activity android:name="com.facsu.publicartmap.explore.CommentActivity" >
+        <activity
+            android:name="com.facsu.publicartmap.explore.CommentActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -154,7 +163,9 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        <activity android:name="com.facsu.publicartmap.explore.ArtworkLocationActivity" >
+        <activity
+            android:name="com.facsu.publicartmap.explore.ArtworkLocationActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -168,6 +179,7 @@
         </activity>
         <activity
             android:name="com.facsu.publicartmap.explore.AddCommentActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -180,7 +192,9 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        <activity android:name="com.facsu.publicartmap.me.AboutActivity" >
+        <activity
+            android:name="com.facsu.publicartmap.me.AboutActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -192,8 +206,9 @@
                     android:scheme="pam" />
             </intent-filter>
         </activity>
-        
-        <activity android:name="com.facsu.publicartmap.login.LoginTabActivity" >
+        <activity
+            android:name="com.facsu.publicartmap.login.LoginTabActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -203,7 +218,6 @@
                 <data
                     android:host="login"
                     android:scheme="pam" />
-                
                 <data
                     android:host="register"
                     android:scheme="pam" />

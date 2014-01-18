@@ -8,6 +8,7 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMMapActivity;
 import com.facsu.publicartmap.bean.Artwork;
+import com.facsu.publicartmap.utils.TextPicker;
 
 public class ArtworkLocationActivity extends PMMapActivity {
 
@@ -22,7 +23,7 @@ public class ArtworkLocationActivity extends PMMapActivity {
 		mapView().setBuiltInZoomControls(true);
 
 		artwork = getIntent().getParcelableExtra("artwork");
-		setTitle(artwork.ArtworkName);
+		setTitle(TextPicker.pick(this, artwork.ArtworkName));
 		
 		ItemizedOverlay overlay = new ItemizedOverlay(getResources()
 				.getDrawable(R.drawable.icon_marka), mapView());

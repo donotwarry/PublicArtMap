@@ -217,7 +217,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 	@Override
 	public void onRequestFailed(MApiRequest req, MApiResponse resp) {
 		dismissDialog();
-
+		showDialog(getString(R.string.app_name), resp.message().getErrorMsg(),
+				null);
 	}
 
 	@Override

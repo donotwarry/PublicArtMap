@@ -98,7 +98,23 @@ public class ShareArtworkActivity extends PMActivity implements
 			@Override
 			public void onClick(View v) {
 				showDialog(getString(R.string.app_name),
-						getString(R.string.agreement), null);
+						getString(R.string.agreement),
+						getString(R.string.agreement), null,
+						getString(R.string.text_reject),
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								finish();
+							}
+						}, new DialogInterface.OnCancelListener() {
+
+							@Override
+							public void onCancel(DialogInterface dialog) {
+								finish();
+							}
+						});
 			}
 		});
 	}
@@ -272,7 +288,8 @@ public class ShareArtworkActivity extends PMActivity implements
 					}
 				} else {
 					if (data != null) {
-						sharePhoto.setImageBitmap(parseThumbnail(data.getData()));
+						sharePhoto
+								.setImageBitmap(parseThumbnail(data.getData()));
 					}
 				}
 				break;
@@ -325,9 +342,9 @@ public class ShareArtworkActivity extends PMActivity implements
 
 		return showBitmap;
 	}
-	
+
 	private Bitmap parseThumbnail(Uri data) {
-        System.gc();
+		System.gc();
 		int sampling = 1;
 		try {
 			InputStream ins = getContentResolver().openInputStream(data);

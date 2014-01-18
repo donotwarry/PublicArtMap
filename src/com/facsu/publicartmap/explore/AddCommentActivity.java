@@ -3,6 +3,7 @@ package com.facsu.publicartmap.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,7 +48,23 @@ public class AddCommentActivity extends PMActivity implements
 			@Override
 			public void onClick(View v) {
 				showDialog(getString(R.string.app_name),
-						getString(R.string.agreement), null);
+						getString(R.string.agreement),
+						getString(R.string.agreement), null,
+						getString(R.string.text_reject),
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								finish();
+							}
+						}, new DialogInterface.OnCancelListener() {
+
+							@Override
+							public void onCancel(DialogInterface dialog) {
+								finish();
+							}
+						});
 			}
 		});
 		setRightButton(R.drawable.title_send, new OnClickListener() {

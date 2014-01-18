@@ -1,16 +1,17 @@
 package com.facsu.publicartmap.widget;
 
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+
 import com.baidu.mapapi.map.LocationData;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.bean.Artwork;
 import com.facsu.publicartmap.utils.MapUtils;
+import com.facsu.publicartmap.utils.TextPicker;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-public class PopupView extends LinearLayout {
+public class PopupView extends FrameLayout {
 
 	private TextView title;
 	private TextView content;
@@ -47,7 +48,7 @@ public class PopupView extends LinearLayout {
 					+ getString(R.string.lab_km);
 		}
 		title.setText(disStr);
-		content.setText(data.ArtworkName);
+		content.setText(TextPicker.pick(getContext(), data.ArtworkName));
 	}
 
 	private String getString(int resId) {

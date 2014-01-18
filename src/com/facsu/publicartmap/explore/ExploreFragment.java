@@ -37,7 +37,9 @@ import com.facsu.publicartmap.app.PMMapFragment;
 import com.facsu.publicartmap.bean.Artwork;
 import com.facsu.publicartmap.bean.GetArtworksByGPSResult;
 import com.facsu.publicartmap.bean.Location;
+import com.facsu.publicartmap.bean.User;
 import com.facsu.publicartmap.utils.MapUtils;
+import com.facsu.publicartmap.utils.TextPicker;
 import com.facsu.publicartmap.widget.PopupView;
 
 public class ExploreFragment extends PMMapFragment implements
@@ -158,11 +160,17 @@ public class ExploreFragment extends PMMapFragment implements
 			refereshData();
 
 		} else if (v.getId() == R.id.title_right_btn) {
-			Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("pam://share"));
-			if (myLoc != null) {
-				i.putExtra("location", myLoc);
+			User user = User.read(preferences());
+			if (user == null) {
+				gotoLogin(null);
+			} else {
+				Intent i = new Intent(Intent.ACTION_VIEW,
+						Uri.parse("pam://share"));
+				if (myLoc != null) {
+					i.putExtra("location", myLoc);
+				}
+				startActivity(i);
 			}
-			startActivity(i);
 
 		} else if (v.getId() == R.id.mylocation) {
 			if (locData != null) {
@@ -206,7 +214,8 @@ public class ExploreFragment extends PMMapFragment implements
 			GeoPoint gp = new GeoPoint(
 					(int) (Double.valueOf(artwork.Latitude) * 1E6),
 					(int) (Double.valueOf(artwork.Longitude) * 1E6));
-			OverlayItem item = new OverlayItem(gp, artwork.ArtworkName, "");
+			OverlayItem item = new OverlayItem(gp, TextPicker.pick(
+					getActivity(), artwork.ArtworkName), "");
 			resultOverlay.addItem(item);
 		}
 		mapView().refresh();

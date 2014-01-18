@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -325,12 +326,17 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				ImageView icon = (ImageView) view.findViewById(R.id.icon);
 				TextView title = (TextView) view.findViewById(R.id.title);
 				title.setText(((Menu) item).title);
-				View logout = view.findViewById(R.id.logout);
+				Button logout = (Button) view.findViewById(R.id.logout);
 				if (((Menu) item).iconUrl != null) {
 					neticon.setVisibility(View.VISIBLE);
 					neticon.setImage(((Menu) item).iconUrl);
 					icon.setVisibility(View.GONE);
 					logout.setVisibility(View.VISIBLE);
+					if (((Menu) item).intent.getAction().equals("login")) {
+						logout.setText(getString(R.string.btn_logout));
+					} else {
+						logout.setText(getString(R.string.btn_cancel_share));
+					}
 					logout.setOnClickListener(new View.OnClickListener() {
 
 						@Override

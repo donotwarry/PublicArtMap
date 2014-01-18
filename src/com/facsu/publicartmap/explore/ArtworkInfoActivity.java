@@ -33,6 +33,8 @@ import com.facsu.publicartmap.bean.GetImageUrlsResult;
 import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.bean.VoteResult;
 import com.facsu.publicartmap.common.Environment;
+import com.facsu.publicartmap.utils.DateUtils;
+import com.facsu.publicartmap.utils.TextPicker;
 import com.facsu.publicartmap.widget.NetworkPhotoView;
 
 public class ArtworkInfoActivity extends PMActivity implements
@@ -116,7 +118,7 @@ public class ArtworkInfoActivity extends PMActivity implements
 					Uri.parse("pam://artworklocation"));
 			intent.putExtra("artwork", infoResult.result());
 			startActivity(intent);
-			
+
 		} else if (v.getId() == R.id.artworkinfo_vote) {
 			if (voteReq != null) {
 				mapiService().abort(voteReq, this, true);
@@ -146,8 +148,8 @@ public class ArtworkInfoActivity extends PMActivity implements
 		oks.setImageUrl(imgUrl);
 		oks.setUrl("http://www.alllan.com");
 		oks.setVenueName(getString(R.string.app_name));
-		oks.setLatitude((float)location.latitude);
-		oks.setLongitude((float)location.longitude);
+		oks.setLatitude((float) location.latitude);
+		oks.setLongitude((float) location.longitude);
 		oks.setAddress(location.address);
 		oks.setSilent(silent);
 		if (platform != null) {
@@ -165,7 +167,7 @@ public class ArtworkInfoActivity extends PMActivity implements
 					i.putExtra("signature", "暂无");
 					sendBroadcast(i);
 				}
-				
+
 			}
 		});
 		oks.show(this);
@@ -198,21 +200,24 @@ public class ArtworkInfoActivity extends PMActivity implements
 		if (artwork == null) {
 			return;
 		}
-		setTitle(artwork.ArtworkName);
+		setTitle(TextPicker.pick(this, artwork.ArtworkName));
 		voteNumTv.setText(String.valueOf(artwork.VoteCount));
 		commentNumTv.setText(String.valueOf(artwork.RetweetCount));
 		StringBuilder sb = new StringBuilder();
-		sb.append(getString(R.string.artwork_name)).append(artwork.ArtworkName)
+		sb.append(getString(R.string.artwork_name))
+				.append(TextPicker.pick(this, artwork.ArtworkName))
 				.append("\n");
-		sb.append(getString(R.string.artwork_author)).append(artwork.Artist)
-				.append("\n");
+		sb.append(getString(R.string.artwork_author))
+				.append(TextPicker.pick(this, artwork.Artist)).append("\n");
 		sb.append(getString(R.string.artwork_time))
-				.append(artwork.CreationDate).append("\n");
+				.append(DateUtils.format(artwork.CreationDate)).append("\n");
 		sb.append(getString(R.string.artwork_intro))
-				.append(artwork.ArtworkDesc).append("\n");
+				.append(TextPicker.pick(this, artwork.ArtworkDesc))
+				.append("\n");
 		introTv.setText(sb.toString());
-		locTv.setText(artwork.Country + "," + artwork.City + ","
-				+ artwork.Address);
+		locTv.setText(TextPicker.pick(this, artwork.Country) + ","
+				+ TextPicker.pick(this, artwork.City) + ","
+				+ TextPicker.pick(this, artwork.Address));
 	}
 
 	class Adapter extends PagerAdapter {
@@ -328,8 +333,7 @@ public class ArtworkInfoActivity extends PMActivity implements
 			if (resp.result() instanceof CreateUserResult) {
 				CreateUserResult result = (CreateUserResult) resp.result();
 				int uid = Integer.valueOf(result.CreateUserResult.ID);
-				preferences().edit().putInt("uid", uid)
-						.commit();
+				preferences().edit().putInt("uid", uid).commit();
 				Environment.setUserID(uid);
 			}
 		}

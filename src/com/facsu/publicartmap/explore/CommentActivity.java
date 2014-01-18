@@ -20,6 +20,7 @@ import com.dennytech.common.service.dataservice.mapi.MApiResponse;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMActivity;
 import com.facsu.publicartmap.bean.GetCommentsResult;
+import com.facsu.publicartmap.bean.User;
 import com.facsu.publicartmap.bean.UserComment;
 import com.facsu.publicartmap.common.APIRequest;
 
@@ -40,11 +41,16 @@ public class CommentActivity extends PMActivity implements MApiRequestHandler {
 
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(Intent.ACTION_VIEW, Uri
-						.parse("pam://addcomment?artworkid=" + artworkID));
-				i.putExtra("location",
-						getIntent().getParcelableExtra("location"));
-				startActivity(i);
+				User user = User.read(preferences());
+				if (user == null) {
+					gotoLogin();
+				} else {
+					Intent i = new Intent(Intent.ACTION_VIEW, Uri
+							.parse("pam://addcomment?artworkid=" + artworkID));
+					i.putExtra("location",
+							getIntent().getParcelableExtra("location"));
+					startActivity(i);
+				}
 			}
 		});
 		list = (ListView) findViewById(R.id.list);
