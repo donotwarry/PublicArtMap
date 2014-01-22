@@ -144,14 +144,27 @@ public class ExploreFragment extends PMMapFragment implements
 		super.onResume();
 		setTitle(R.string.title_explore);
 	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (locClient != null) {
+			locClient.start();
+		}
+	}
+	
+	@Override
+	public void onStop() {
+		if (locClient != null) {
+			locClient.stop();
+		}
+		super.onStop();
+	}
 
 	@Override
 	public void onDestroy() {
 		if (request != null) {
 			mapiService().abort(request, this, true);
-		}
-		if (locClient != null) {
-			locClient.stop();
 		}
 		super.onDestroy();
 	}

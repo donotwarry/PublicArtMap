@@ -9,8 +9,7 @@ public class DateUtils {
 	public static String format(String serverTime) {
 		String result = serverTime.replace("/Date(", "").replace(")/", "");
 		if (result.contains("+")) {
-			String[] splits = result.split("+");
-			result = splits[0];
+			result = result.substring(0, result.indexOf("+"));
 		}
 		
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

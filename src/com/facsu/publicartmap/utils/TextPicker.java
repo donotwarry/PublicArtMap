@@ -13,15 +13,13 @@ public class TextPicker {
 			return source;
 		}
 		
-		String[] result = source.split(REG);
-		if (result.length != 2) {
-			return source;
-		}
+		String before = source.substring(0, source.indexOf(REG));
+		String after = source.substring(source.indexOf(REG) + REG.length(), source.length());
 		
 		if (ctx.getResources().getBoolean(R.bool.isEnvZH)) {
-			return result[0];
+			return before;
 		} else {
-			return result[1];
+			return after;
 		}
 	}
 
