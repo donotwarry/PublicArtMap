@@ -18,6 +18,7 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.utils.UIHandler;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 
 import com.dennytech.common.service.dataservice.mapi.MApiRequest;
@@ -92,7 +93,7 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 			authorize(new TencentWeibo(getActivity()));
 
 		} else if (v == loginByQQ) {
-
+			authorize(new QZone(getActivity()));
 		}
 	}
 
@@ -103,10 +104,24 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 
 		if (plat.isValid()) {
 			String userId = plat.getDb().getUserId();
-			if (userId != null) {
+			if (!TextUtils.isEmpty(userId)) {
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
-				gotoRegister("username=" + plat.getDb().getUserName()
-						+ "&useravatar=" + plat.getDb().getUserIcon());
+//				gotoRegister("username=" + plat.getDb().getUserName()
+//						+ "&useravatar=" + plat.getDb().getUserIcon());
+				un = plat.getDb().getUserName();
+				ua = plat.getDb().getUserIcon();
+				requestUser(un, plat.getDb().getToken(), ua, null);
+				if (plat instanceof SinaWeibo) {
+					Environment.saveSinaAvatar(preferences(), plat.getDb()
+							.getUserName(), plat.getDb().getUserIcon());
+
+				} else if (plat instanceof TencentWeibo) {
+					Environment.saveQQWeiboAvatar(preferences(), plat.getDb()
+							.getUserName(), plat.getDb().getUserIcon());
+				} else if (plat instanceof QZone) {
+					Environment.saveQQAvatar(preferences(), plat.getDb()
+							.getUserName(), plat.getDb().getUserIcon());
+				}
 				return;
 			}
 		}
@@ -119,8 +134,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
 		case MSG_USERID_FOUND: {
-			Toast.makeText(getActivity(), R.string.userid_found,
-					Toast.LENGTH_SHORT).show();
+//			Toast.makeText(getActivity(), R.string.userid_found,
+//					Toast.LENGTH_SHORT).show();
 		}
 			break;
 		case MSG_LOGIN: {
@@ -234,16 +249,22 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 
 		if (plat.isValid()) {
 			String userId = plat.getDb().getUserId();
-			if (userId != null) {
+			if (!TextUtils.isEmpty(userId)) {
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
-				gotoRegister("username=" + plat.getDb().getUserName()
-						+ "&useravatar=" + plat.getDb().getUserIcon());
+//				gotoRegister("username=" + plat.getDb().getUserName()
+//						+ "&useravatar=" + plat.getDb().getUserIcon());
+				un = plat.getDb().getUserName();
+				ua = plat.getDb().getUserIcon();
+				requestUser(un, plat.getDb().getToken(), ua, null);
 				if (plat instanceof SinaWeibo) {
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
 
 				} else if (plat instanceof TencentWeibo) {
 					Environment.saveQQWeiboAvatar(preferences(), plat.getDb()
+							.getUserName(), plat.getDb().getUserIcon());
+				} else if (plat instanceof QZone) {
+					Environment.saveQQAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
 				}
 			}

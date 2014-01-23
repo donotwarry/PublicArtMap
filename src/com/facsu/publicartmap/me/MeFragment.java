@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.utils.UIHandler;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 
 import com.dennytech.common.adapter.BasicAdapter;
@@ -53,6 +55,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 	private Platform xlPlatform;
 	private Platform tcPlatform;
+	private Platform qqPlatform;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +91,15 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				adapter.reset();
 			}
 		}
+		
+		QZone qzone = new QZone(getActivity());
+		if (qzone.isValid()) {
+			String userId = qzone.getDb().getUserId();
+			if (userId != null) {
+				this.qqPlatform = qzone;
+				adapter.reset();
+			}
+		}
 	}
 
 	@Override
@@ -108,6 +120,9 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				authorize(new SinaWeibo(getActivity()), xlPlatform);
 			} else if ("tcweibo".equals(menu.intent.getAction())) {
 				authorize(new TencentWeibo(getActivity()), tcPlatform);
+
+			} else if ("qq".equals(menu.intent.getAction())) {
+				authorize(new QZone(getActivity()), qqPlatform);
 
 			} else if ("update".equals(menu.intent.getAction())) {
 				UmengUpdateAgent.setUpdateOnlyWifi(false);
@@ -165,7 +180,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 		if (plat.isValid()) {
 			String userId = plat.getDb().getUserId();
-			if (userId != null) {
+			if (!TextUtils.isEmpty(userId)) {
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
 				save = plat;
 				return;
@@ -257,6 +272,15 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				tcweiboMenu.title = tcPlatform.getDb().getUserName();
 			}
 			menus.add(tcweiboMenu);
+			Menu qqMenu = new Menu(R.drawable.ic_me_tcweibo,
+					getString(R.string.menu_qq_login), new Intent(
+							"qq"));
+			if (qqPlatform != null) {
+				qqMenu.iconUrl = qqPlatform.getDb().getUserIcon();
+				qqMenu.title = qqPlatform.getDb().getUserName();
+			}
+			menus.add(qqMenu);
+			
 			menuMap.put(sections[1], menus);
 
 			menus = new ArrayList<Menu>();
@@ -352,9 +376,13 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 									"weibo")) {
 								xlPlatform.removeAccount();
 								xlPlatform = null;
-							} else {
+							} else if (((Menu) item).intent.getAction().equals(
+									"tcweibo")) {
 								tcPlatform.removeAccount();
 								tcPlatform = null;
+							} else {
+								qqPlatform.removeAccount();
+								qqPlatform = null;
 							}
 							reset();
 						}
@@ -395,7 +423,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 
 		if (plat.isValid()) {
 			String userId = plat.getDb().getUserId();
-			if (userId != null) {
+			if (!TextUtils.isEmpty(userId)) {
 				if (plat instanceof SinaWeibo) {
 					this.xlPlatform = plat;
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
@@ -405,7 +433,11 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 					this.tcPlatform = plat;
 					Environment.saveQQWeiboAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
+				} else if (plat instanceof QZone) {
+					Environment.saveQQAvatar(preferences(), plat.getDb()
+							.getUserName(), plat.getDb().getUserIcon());
 				}
+				
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
 			}
 		}

@@ -28,8 +28,8 @@
 		AppSecret="4a701e2b553c833ec05ce7352849f528" RedirectUri="http://www.alllan.com"
 		ShortLinkConversationEnable="true" Enable="true" />
 
-	<QZone Id="3" SortId="3" AppId="100371282" AppKey="aed9b0303e3ed1e27bae87c33761161d"
-		ShortLinkConversationEnable="true" Enable="false" />
+	<QZone Id="3" SortId="3" AppId="101011613" AppKey="f5f06f4efe9f28297eaee2b51371e471"
+		ShortLinkConversationEnable="true" Enable="true" />
 
 	<Wechat Id="4" SortId="4" AppId="wx15e249eb6acec72d"
 		ShortLinkConversationEnable="true" Enable="true" />
@@ -41,7 +41,7 @@
 		Enable="false" />
 
 	<QQ Id="6" SortId="6" AppId="101011613" AppKey="f5f06f4efe9f28297eaee2b51371e471"
-		ShortLinkConversationEnable="true" Enable="false" />
+		ShortLinkConversationEnable="true" Enable="true" />
 
 	<Facebook Id="7" SortId="7" ConsumerKey="107704292745179"
 		ConsumerSecret="38053202e1a5fe26c80c753071f0b573"

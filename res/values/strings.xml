@@ -54,6 +54,7 @@
     <string name="section_info">产品信息</string>
     <string name="menu_weibo_login">绑定新浪微博</string>
     <string name="menu_txweibo_login">绑定腾讯微博</string>
+    <string name="menu_qq_login">绑定QQ账户</string>
     <string name="menu_login">点击登录</string>
     <string name="menu_feedback">用户反馈</string>
     <string name="menu_update">检查更新</string>
