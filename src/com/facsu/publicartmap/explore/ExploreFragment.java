@@ -58,10 +58,12 @@ public class ExploreFragment extends PMMapFragment implements
 
 	boolean isRequest = false;
 	boolean isFirstLoc = true;
+	boolean isClickOnPop = false;
 
 	private MApiRequest request;
 	private Artwork[] data;
 	private Artwork curArtwork;
+	private GeoPoint curGP;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -279,6 +281,12 @@ public class ExploreFragment extends PMMapFragment implements
 
 	@Override
 	public void onMapAnimationFinish() {
+		if (isClickOnPop) {
+			pop.showPopup(popView, curGP, 32);
+		} else {
+			pop.hidePop();
+		}
+		isClickOnPop = false;
 		refereshData();
 	}
 
@@ -288,6 +296,12 @@ public class ExploreFragment extends PMMapFragment implements
 
 	@Override
 	public void onMapMoveFinish() {
+		if (isClickOnPop) {
+			pop.showPopup(popView, curGP, 32);
+		} else {
+			pop.hidePop();
+		}
+		isClickOnPop = false;
 		refereshData();
 	}
 
@@ -335,14 +349,15 @@ public class ExploreFragment extends PMMapFragment implements
 
 		@Override
 		public boolean onTap(int index) {
+			pop.hidePop();
 			Artwork aw = data[index];
 			curArtwork = aw;
 			popView.setData(aw, locData);
-			GeoPoint pt = new GeoPoint(
+			curGP = new GeoPoint(
 					(int) (Double.valueOf(aw.Latitude) * 1E6),
 					(int) (Double.valueOf(aw.Longitude) * 1E6));
-			mapController().animateTo(pt);
-			pop.showPopup(popView, pt, 32);
+			mapController().animateTo(curGP);
+			isClickOnPop = true;
 			return true;
 		}
 
