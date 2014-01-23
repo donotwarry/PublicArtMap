@@ -16,7 +16,7 @@
         <attr name="input_hint" format="string" />
         <attr name="input_type" format="integer">
             <flag name="text" value="0x01" />
-            <flag name="password" value="0x80" />
+            <flag name="password" value="0x81" />
             <flag name="number" value="0x02" />
             <flag name="phone" value="0x03" />
             <flag name="email" value="0x20" />

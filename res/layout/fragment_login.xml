@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/login_sinaweibo" />
         </LinearLayout>
-        
+
         <LinearLayout
             android:id="@+id/login_by_qq"
             android:layout_width="match_parent"
@@ -97,7 +97,6 @@
                 android:text="@string/login_qqweibo"
                 android:textColor="@color/deep_gray" />
         </LinearLayout>
-        
     </LinearLayout>
 
 </LinearLayout>
