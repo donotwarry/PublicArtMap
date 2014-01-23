@@ -179,8 +179,10 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
 		case MSG_USERID_FOUND: {
-			Toast.makeText(getActivity(), R.string.userid_found,
-					Toast.LENGTH_SHORT).show();
+			adapter.reset();
+			adapter.notifyDataSetChanged();
+//			Toast.makeText(getActivity(), R.string.userid_found,
+//					Toast.LENGTH_SHORT).show();
 		}
 			break;
 		case MSG_LOGIN: {
@@ -394,16 +396,17 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 		if (plat.isValid()) {
 			String userId = plat.getDb().getUserId();
 			if (userId != null) {
-				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
 				if (plat instanceof SinaWeibo) {
+					this.xlPlatform = plat;
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
 
 				} else if (plat instanceof TencentWeibo) {
+					this.tcPlatform = plat;
 					Environment.saveQQWeiboAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
 				}
-				this.xlPlatform = plat;
+				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
 			}
 		}
 	}
