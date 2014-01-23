@@ -295,7 +295,7 @@ public class OnekeyShare extends FakeActivity implements
 		llPage.setOrientation(LinearLayout.VERTICAL);
 		int resId = getBitmapRes(getContext(), "share_vp_back");
 		if (resId > 0) {
-			llPage.setBackgroundResource(resId);
+			llPage.setBackgroundResource(android.R.drawable.dialog_holo_dark_frame);
 		}
 		FrameLayout.LayoutParams lpLl = new FrameLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
