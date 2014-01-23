@@ -9,6 +9,7 @@
         android:layout_gravity="center"
         android:layout_marginRight="23dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/ic_pop"
         android:orientation="vertical" >
 
@@ -23,12 +24,13 @@
 
         <TextView
             android:id="@+id/content"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"
             android:ellipsize="end"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:maxLines="2"
+            android:layout_marginLeft="10dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textSize="18sp" />
