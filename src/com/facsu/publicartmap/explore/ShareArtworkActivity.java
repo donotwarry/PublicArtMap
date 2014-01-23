@@ -36,6 +36,7 @@ import com.facsu.publicartmap.app.PMActivity;
 import com.facsu.publicartmap.bean.CreateArtworkResult;
 import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.bean.UploadImageResult;
+import com.facsu.publicartmap.bean.User;
 import com.facsu.publicartmap.common.APIRequest;
 import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.utils.PhotoPicker;
@@ -143,13 +144,15 @@ public class ShareArtworkActivity extends PMActivity implements
 		if (uploadImgReq != null) {
 			mapiService().abort(uploadImgReq, this, true);
 		}
+		
+		User user = User.read(preferences());
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ArtworkName", "我的上传");
 		map.put("ArtworkDesc", input.getText().toString().trim());
-		map.put("SubmitterID", Environment.userID());
+		map.put("SubmitterID", user.UID);
 		map.put("Country", "");
-		map.put("Artist", Environment.userName());
+		map.put("Artist", user.UserName);
 		map.put("City", location.city);
 		map.put("Address", location.address);
 		map.put("Longitude", String.valueOf(location.longitude));
