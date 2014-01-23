@@ -12,7 +12,7 @@ public class DateUtils {
 			result = result.substring(0, result.indexOf("+"));
 		}
 		
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(Long.valueOf(result));
 		
