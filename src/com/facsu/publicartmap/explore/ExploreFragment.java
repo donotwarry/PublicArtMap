@@ -220,13 +220,13 @@ public class ExploreFragment extends PMMapFragment implements
 	}
 
 	private void showData() {
-		if (resultOverlay == null) {
-			resultOverlay = new MyOverlay(getResources().getDrawable(
-					R.drawable.icon_marka), mapView());
-			mapView().getOverlays().add(resultOverlay);
-		} else {
-			resultOverlay.removeAll();
+		if (resultOverlay != null) {
+			mapView().getOverlays().remove(resultOverlay);
 		}
+		resultOverlay = new MyOverlay(getResources().getDrawable(
+				R.drawable.icon_marka), mapView());
+		mapView().getOverlays().add(resultOverlay);
+		resultOverlay.removeAll();
 
 		for (Artwork artwork : data) {
 			GeoPoint gp = new GeoPoint(

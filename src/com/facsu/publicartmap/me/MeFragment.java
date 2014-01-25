@@ -272,7 +272,7 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 				tcweiboMenu.title = tcPlatform.getDb().getUserName();
 			}
 			menus.add(tcweiboMenu);
-			Menu qqMenu = new Menu(R.drawable.ic_me_tcweibo,
+			Menu qqMenu = new Menu(R.drawable.ic_me_qq,
 					getString(R.string.menu_qq_login), new Intent(
 							"qq"));
 			if (qqPlatform != null) {
