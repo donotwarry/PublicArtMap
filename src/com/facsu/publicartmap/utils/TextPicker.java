@@ -9,6 +9,10 @@ public class TextPicker {
 	private static final String REG = "#||#";
 	
 	public static String pick(Context ctx, String source) {
+		if (source == null) {
+			return "";
+		}
+		
 		if (!source.contains(REG)) {
 			return source;
 		}

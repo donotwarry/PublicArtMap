@@ -33,12 +33,12 @@ import com.dennytech.common.service.dataservice.mapi.MApiResponse;
 import com.dennytech.common.util.Log;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMActivity;
+import com.facsu.publicartmap.app.PMApplication;
 import com.facsu.publicartmap.bean.CreateArtworkResult;
 import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.bean.UploadImageResult;
 import com.facsu.publicartmap.bean.User;
 import com.facsu.publicartmap.common.APIRequest;
-import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.utils.PhotoPicker;
 
 public class ShareArtworkActivity extends PMActivity implements
@@ -86,6 +86,9 @@ public class ShareArtworkActivity extends PMActivity implements
 		});
 
 		location = getIntent().getParcelableExtra("location");
+		if (location == null) {
+			location = PMApplication.instance().myLocation();
+		}
 
 		addressTv = (TextView) findViewById(R.id.share_location);
 		addressTv.setText(location.address);
@@ -100,7 +103,7 @@ public class ShareArtworkActivity extends PMActivity implements
 			public void onClick(View v) {
 				showDialog(getString(R.string.app_name),
 						getString(R.string.agreement),
-						getString(R.string.agreement), null,
+						getString(R.string.text_agreen), null,
 						getString(R.string.text_reject),
 						new DialogInterface.OnClickListener() {
 
@@ -181,6 +184,8 @@ public class ShareArtworkActivity extends PMActivity implements
 		if (uploadImgReq != null) {
 			mapiService().abort(uploadImgReq, this, true);
 		}
+		
+		User user = User.read(preferences());
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ImageData", bitmapToBase64(showBitmap));
@@ -188,7 +193,7 @@ public class ShareArtworkActivity extends PMActivity implements
 		map.put("ImageSource", "");
 		uploadImgReq = APIRequest.mapiPostJson(
 				"http://web358082.dnsvhost.com/ACservice/ACService.svc/UploadImage/"
-						+ aid + "/" + Environment.userID(),
+						+ aid + "/" + user.UID,
 				UploadImageResult.class, map);
 		mapiService().exec(uploadImgReq, this);
 	}

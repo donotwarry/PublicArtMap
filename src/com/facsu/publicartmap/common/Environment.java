@@ -1,48 +1,8 @@
 package com.facsu.publicartmap.common;
 
 import android.content.SharedPreferences;
-import android.text.TextUtils;
-
-import com.facsu.publicartmap.bean.User;
 
 public class Environment {
-
-	private static int userID;
-	private static String userName;
-	private static String userAvatar;
-
-	private static User user;
-
-	public static int userID() {
-		return userID;
-	}
-
-	public static void setUserID(int id) {
-		userID = id;
-	}
-
-	public static String userName() {
-		return TextUtils.isEmpty(userName) ? "游客" : userName;
-	}
-
-	public static void setUserName(String name) {
-		userName = name;
-	}
-
-	public static String userAvatar() {
-		return userAvatar;
-	}
-
-	public static void setUserAvatar(String avatar) {
-		userAvatar = avatar;
-	}
-
-	public static User user() {
-		if (user == null) {
-			user = new User(userID, userName, userAvatar);
-		}
-		return user;
-	}
 
 	public static String getSinaAvatar(SharedPreferences pref, String name) {
 		String sinaName = pref.getString("sinaname", "");

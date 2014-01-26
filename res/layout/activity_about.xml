@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:textSize="16sp"
-        android:text="@string/about_content" />
+        android:text="@string/about_content"
+        android:textSize="16sp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -57,5 +57,13 @@
             android:scaleType="fitStart"
             android:src="@drawable/ic_about_book" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="1.0"
+        android:textColor="@color/text_deep_gray" />
 
 </LinearLayout>

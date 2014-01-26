@@ -17,6 +17,10 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
+    <style name="AppTheme.Splash" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">    
+        <item name="android:windowBackground">@drawable/splash</item>    
+    </style>  
+    
     <style name="CustomWindowTitleBackground">
         <item name="android:background">@color/title_bg</item>
     </style>

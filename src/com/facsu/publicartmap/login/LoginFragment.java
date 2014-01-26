@@ -128,6 +128,7 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		plat.setPlatformActionListener(this);
 		plat.SSOSetting(true);
 		plat.showUser(null);
+		showProgressDialog(getString(R.string.msg_logining));
 	}
 
 	@Override

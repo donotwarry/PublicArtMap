@@ -5,9 +5,9 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.baidu.mapapi.map.LocationData;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.bean.Artwork;
+import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.utils.MapUtils;
 import com.facsu.publicartmap.utils.TextPicker;
 
@@ -31,7 +31,7 @@ public class PopupView extends FrameLayout {
 		content = (TextView) findViewById(R.id.content);
 	}
 
-	public void setData(Artwork data, LocationData myLoc) {
+	public void setData(Artwork data, Location myLoc) {
 		double awLat = Double.valueOf(data.Latitude);
 		double awLng = Double.valueOf(data.Longitude);
 		double distance = MapUtils.getDistance(awLat, awLng, myLoc.latitude,

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,9 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MKMapViewListener;
@@ -33,22 +31,21 @@ import com.dennytech.common.service.dataservice.mapi.MApiResponse;
 import com.dennytech.common.service.dataservice.mapi.impl.BasicMApiRequest;
 import com.dennytech.common.util.Log;
 import com.facsu.publicartmap.R;
+import com.facsu.publicartmap.app.PMApplication;
 import com.facsu.publicartmap.app.PMMapFragment;
 import com.facsu.publicartmap.bean.Artwork;
 import com.facsu.publicartmap.bean.GetArtworksByGPSResult;
 import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.bean.User;
+import com.facsu.publicartmap.common.LocationListener;
 import com.facsu.publicartmap.utils.MapUtils;
 import com.facsu.publicartmap.utils.TextPicker;
 import com.facsu.publicartmap.widget.PopupView;
 
-public class ExploreFragment extends PMMapFragment implements
-		BDLocationListener, OnClickListener, MKMapViewListener,
-		MApiRequestHandler {
+public class ExploreFragment extends PMMapFragment implements LocationListener,
+		OnClickListener, MKMapViewListener, MApiRequestHandler {
 
 	private View rootView;
-	private LocationClient locClient;
-	private LocationData locData;
 	private Location myLoc;
 	private MyLocationOverlay myLocationOverlay;
 	private MyOverlay resultOverlay;
@@ -115,25 +112,25 @@ public class ExploreFragment extends PMMapFragment implements
 		popView = (PopupView) getActivity().getLayoutInflater().inflate(
 				R.layout.layout_pop, null);
 
-		locClient = new LocationClient(getActivity());
-		locData = new LocationData();
-		locClient.registerLocationListener(this);
-		LocationClientOption option = new LocationClientOption();
-		option.setOpenGps(true);
-		option.setAddrType("all");
-		option.setCoorType("bd09ll");
-		option.setPriority(LocationClientOption.NetWorkFirst);
-		option.setScanSpan(60000);
-		locClient.setLocOption(option);
-		locClient.start();
-		Toast.makeText(getActivity(), getString(R.string.msg_locating),
-				Toast.LENGTH_SHORT).show();
-
 		myLocationOverlay = new MyLocationOverlay(mapView());
-		myLocationOverlay.setData(locData);
+		myLoc = PMApplication.instance().myLocation();
+		if (myLoc != null) {
+			onReceiveLocation(myLoc);
+		} else {
+			PMApplication.instance().addLocationListener(this);
+		}
+
 		mapView().getOverlays().add(myLocationOverlay);
 		myLocationOverlay.enableCompass();
 		mapView().refresh();
+
+		if (myLoc != null) {
+			new Handler() {
+				public void handleMessage(android.os.Message msg) {
+					refereshData();
+				};
+			}.sendEmptyMessageDelayed(0, 1200);
+		}
 	}
 
 	@Override
@@ -145,22 +142,6 @@ public class ExploreFragment extends PMMapFragment implements
 	public void onResume() {
 		super.onResume();
 		setTitle(R.string.title_explore);
-	}
-	
-	@Override
-	public void onStart() {
-		super.onStart();
-		if (locClient != null) {
-			locClient.start();
-		}
-	}
-	
-	@Override
-	public void onStop() {
-		if (locClient != null) {
-			locClient.stop();
-		}
-		super.onStop();
 	}
 
 	@Override
@@ -190,12 +171,12 @@ public class ExploreFragment extends PMMapFragment implements
 			}
 
 		} else if (v.getId() == R.id.mylocation) {
-			if (locData != null) {
+			if (myLoc != null) {
 				mapController().animateTo(
-						new GeoPoint((int) (locData.latitude * 1e6),
-								(int) (locData.longitude * 1e6)));
+						new GeoPoint((int) (myLoc.latitude * 1e6),
+								(int) (myLoc.longitude * 1e6)));
 				Toast.makeText(getActivity(),
-						locData.latitude + ", " + locData.longitude,
+						myLoc.latitude + ", " + myLoc.longitude,
 						Toast.LENGTH_SHORT).show();
 			} else {
 				Toast.makeText(getActivity(), getString(R.string.msg_locating),
@@ -240,25 +221,21 @@ public class ExploreFragment extends PMMapFragment implements
 	}
 
 	@Override
-	public void onReceiveLocation(BDLocation location) {
+	public void onReceiveLocation(Location location) {
 		if (location == null
-				|| (location.getLatitude() == 0 && location.getLongitude() == 0))
+				|| (location.latitude == 0 && location.longitude == 0))
 			return;
-
-		this.myLoc = new Location(location.getAddrStr(),
-				location.getLatitude(), location.getLongitude(),
-				location.getCity());
-		locData.latitude = location.getLatitude();
-		locData.longitude = location.getLongitude();
-		locData.accuracy = location.getRadius();
-		locData.direction = location.getDerect();
+		this.myLoc = location;
+		LocationData locData = new LocationData();
+		locData.latitude = location.latitude;
+		locData.longitude = location.longitude;
 		myLocationOverlay.setData(locData);
 		mapView().refresh();
 		if (isRequest || isFirstLoc) {
 			Log.d("LocationOverlay", "receive location, animate to it");
 			mapController().animateTo(
-					new GeoPoint((int) (locData.latitude * 1e6),
-							(int) (locData.longitude * 1e6)));
+					new GeoPoint((int) (location.latitude * 1e6),
+							(int) (location.longitude * 1e6)));
 			isRequest = false;
 			myLocationOverlay.setLocationMode(LocationMode.NORMAL);
 		}
@@ -319,7 +296,8 @@ public class ExploreFragment extends PMMapFragment implements
 	@Override
 	public void onRequestFailed(MApiRequest req, MApiResponse resp) {
 		progress.setVisibility(View.GONE);
-		Toast.makeText(getActivity(), resp.message().getErrorMsg(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(getActivity(), resp.message().getErrorMsg(),
+				Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -352,9 +330,8 @@ public class ExploreFragment extends PMMapFragment implements
 			pop.hidePop();
 			Artwork aw = data[index];
 			curArtwork = aw;
-			popView.setData(aw, locData);
-			curGP = new GeoPoint(
-					(int) (Double.valueOf(aw.Latitude) * 1E6),
+			popView.setData(aw, myLoc);
+			curGP = new GeoPoint((int) (Double.valueOf(aw.Latitude) * 1E6),
 					(int) (Double.valueOf(aw.Longitude) * 1E6));
 			mapController().animateTo(curGP);
 			isClickOnPop = true;

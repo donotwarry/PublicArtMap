@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 
 import com.facsu.publicartmap.app.PMActivity;
 
@@ -15,10 +13,6 @@ public class SplashActivity extends PMActivity {
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
-		ImageView iv = new ImageView(this);
-		iv.setImageResource(R.drawable.splash);
-		iv.setScaleType(ScaleType.CENTER_CROP);
-		setContentView(iv);
 
 		new Handler() {
 			public void handleMessage(android.os.Message msg) {

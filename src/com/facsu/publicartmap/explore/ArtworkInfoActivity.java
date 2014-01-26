@@ -31,8 +31,8 @@ import com.facsu.publicartmap.bean.CreateUserResult;
 import com.facsu.publicartmap.bean.GetArtworkByIDResult;
 import com.facsu.publicartmap.bean.GetImageUrlsResult;
 import com.facsu.publicartmap.bean.Location;
+import com.facsu.publicartmap.bean.User;
 import com.facsu.publicartmap.bean.VoteResult;
-import com.facsu.publicartmap.common.Environment;
 import com.facsu.publicartmap.utils.DateUtils;
 import com.facsu.publicartmap.utils.TextPicker;
 import com.facsu.publicartmap.widget.NetworkPhotoView;
@@ -123,9 +123,10 @@ public class ArtworkInfoActivity extends PMActivity implements
 			if (voteReq != null) {
 				mapiService().abort(voteReq, this, true);
 			}
+			User user = User.read(preferences());
 			voteReq = BasicMApiRequest.mapiGet(
 					"http://web358082.dnsvhost.com/ACservice/ACService.svc/Vote/"
-							+ Environment.userID() + "/" + artworkID + "/1",
+							+ user.UID + "/" + artworkID + "/1",
 					CacheType.DISABLED, VoteResult.class);
 			mapiService().exec(voteReq, this);
 
@@ -334,7 +335,6 @@ public class ArtworkInfoActivity extends PMActivity implements
 				CreateUserResult result = (CreateUserResult) resp.result();
 				int uid = Integer.valueOf(result.CreateUserResult.ID);
 				preferences().edit().putInt("uid", uid).commit();
-				Environment.setUserID(uid);
 			}
 		}
 	}
