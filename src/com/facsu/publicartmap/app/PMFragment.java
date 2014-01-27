@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import com.dennytech.common.app.CLFragment;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.widget.TitleBar;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * base fragment
@@ -26,6 +27,18 @@ import com.facsu.publicartmap.widget.TitleBar;
 public class PMFragment extends CLFragment {
 
 	private TitleBar titleBar;
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		MobclickAgent.onPageStart(getClass().getSimpleName());
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		MobclickAgent.onPageEnd(getClass().getSimpleName());
+	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {

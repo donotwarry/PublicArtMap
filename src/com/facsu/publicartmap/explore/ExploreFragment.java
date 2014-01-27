@@ -201,13 +201,13 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 	}
 
 	private void showData() {
-		if (resultOverlay != null) {
-			mapView().getOverlays().remove(resultOverlay);
+		if (resultOverlay == null) {
+			resultOverlay = new MyOverlay(getResources().getDrawable(
+					R.drawable.icon_marka), mapView());
+			mapView().getOverlays().add(resultOverlay);
+		} else {
+			resultOverlay.removeAll();
 		}
-		resultOverlay = new MyOverlay(getResources().getDrawable(
-				R.drawable.icon_marka), mapView());
-		mapView().getOverlays().add(resultOverlay);
-		resultOverlay.removeAll();
 
 		for (Artwork artwork : data) {
 			GeoPoint gp = new GeoPoint(
@@ -217,6 +217,7 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 					getActivity(), artwork.ArtworkName), "");
 			resultOverlay.addItem(item);
 		}
+		
 		mapView().refresh();
 	}
 

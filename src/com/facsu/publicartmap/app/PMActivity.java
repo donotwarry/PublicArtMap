@@ -13,6 +13,7 @@ import android.view.Window;
 import com.dennytech.common.app.CLActivity;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.widget.TitleBar;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * base activity
@@ -27,6 +28,20 @@ public class PMActivity extends CLActivity {
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onPageStart(getClass().getSimpleName());
+		MobclickAgent.onResume(this);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPageEnd(getClass().getSimpleName());
+		MobclickAgent.onPause(this);
 	}
 
 	@Override
