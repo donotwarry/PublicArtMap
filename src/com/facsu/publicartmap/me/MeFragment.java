@@ -255,6 +255,30 @@ public class MeFragment extends PMFragment implements OnItemClickListener,
 			}
 			menus.add(loginMenu);
 			menuMap.put(sections[0], menus);
+			
+			SinaWeibo weibo = new SinaWeibo(getActivity());
+			if (weibo.isValid()) {
+				String userId = weibo.getDb().getUserId();
+				if (userId != null) {
+					xlPlatform = weibo;
+				}
+			}
+
+			TencentWeibo tcweibo = new TencentWeibo(getActivity());
+			if (tcweibo.isValid()) {
+				String userId = tcweibo.getDb().getUserId();
+				if (userId != null) {
+					tcPlatform = tcweibo;
+				}
+			}
+			
+			QZone qzone = new QZone(getActivity());
+			if (qzone.isValid()) {
+				String userId = qzone.getDb().getUserId();
+				if (userId != null) {
+					qqPlatform = qzone;
+				}
+			}
 
 			menus = new ArrayList<Menu>();
 			Menu weiboMenu = new Menu(R.drawable.ic_me_weibo,

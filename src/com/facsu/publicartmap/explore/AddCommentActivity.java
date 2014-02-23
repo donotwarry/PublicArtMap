@@ -119,7 +119,14 @@ public class AddCommentActivity extends PMActivity implements
 			AddCommentResult result = (AddCommentResult) resp.result();
 			if (!result.AddCommentResult.hasError()) {
 				showDialog(getString(R.string.app_name),
-						getString(R.string.msg_add_comment_success), null);
+						getString(R.string.msg_add_comment_success),
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								finish();
+							}
+						});
 			} else {
 				showDialog(getString(R.string.app_name),
 						result.AddCommentResult.ErrorDesc, null);

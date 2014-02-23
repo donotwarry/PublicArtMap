@@ -124,6 +124,10 @@ public class ArtworkInfoActivity extends PMActivity implements
 				mapiService().abort(voteReq, this, true);
 			}
 			User user = User.read(preferences());
+			if (user == null) {
+				gotoLogin();
+				return;
+			}
 			voteReq = BasicMApiRequest.mapiGet(
 					"http://web358082.dnsvhost.com/ACservice/ACService.svc/Vote/"
 							+ user.UID + "/" + artworkID + "/1",

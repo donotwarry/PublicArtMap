@@ -84,6 +84,7 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 	public void onClick(View v) {
 		if (v == login) {
 			if (checkInput()) {
+				showProgressDialog(getString(R.string.msg_logining));
 				requestUser(un, pw, ua, null);
 			}
 		} else if (v == loginBySinaWeibo) {
@@ -189,7 +190,6 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 	}
 
 	private void requestUser(String un, String pw, String au, String s) {
-		showProgressDialog(getString(R.string.msg_logining));
 		if (request != null) {
 			mapiService().abort(request, LoginFragment.this, true);
 		}

@@ -2,7 +2,7 @@ package com.facsu.publicartmap.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facsu.publicartmap.R;
@@ -11,7 +11,7 @@ import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.utils.MapUtils;
 import com.facsu.publicartmap.utils.TextPicker;
 
-public class PopupView extends FrameLayout {
+public class PopupView extends LinearLayout {
 
 	private TextView title;
 	private TextView content;
