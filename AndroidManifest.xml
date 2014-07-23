@@ -63,15 +63,12 @@
             android:name="UMENG_CHANNEL"
             android:value="Umeng" >
         </meta-data>
-        <!-- <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" /> -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="4030500" />
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAT6jZbQOgdX8JR6zvylp1o_SX7gxN--yM" />
+            android:value="AIzaSyCQ-VlLgWO6nT-_z5rlWu3HmSEk0MUhbuY" />
 
         <service
             android:name="com.umeng.common.net.DownloadingService"
