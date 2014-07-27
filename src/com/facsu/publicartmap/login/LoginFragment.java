@@ -21,6 +21,7 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 
+import com.dennytech.common.service.dataservice.mapi.CacheType;
 import com.dennytech.common.service.dataservice.mapi.MApiRequest;
 import com.dennytech.common.service.dataservice.mapi.MApiRequestHandler;
 import com.dennytech.common.service.dataservice.mapi.MApiResponse;
@@ -85,7 +86,7 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		if (v == login) {
 			if (checkInput()) {
 				showProgressDialog(getString(R.string.msg_logining));
-				requestUser(un, pw, ua, null);
+				requestUser(un, pw, ua, null, null);
 			}
 		} else if (v == loginBySinaWeibo) {
 			authorize(new SinaWeibo(getActivity()));
@@ -107,11 +108,11 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 			String userId = plat.getDb().getUserId();
 			if (!TextUtils.isEmpty(userId)) {
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
-//				gotoRegister("username=" + plat.getDb().getUserName()
-//						+ "&useravatar=" + plat.getDb().getUserIcon());
+				// gotoRegister("username=" + plat.getDb().getUserName()
+				// + "&useravatar=" + plat.getDb().getUserIcon());
 				un = plat.getDb().getUserName();
 				ua = plat.getDb().getUserIcon();
-				requestUser(un, plat.getDb().getToken(), ua, null);
+				requestUser(un, null, ua, plat.getDb().getToken(), null);
 				if (plat instanceof SinaWeibo) {
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
@@ -136,8 +137,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 	public boolean handleMessage(Message msg) {
 		switch (msg.what) {
 		case MSG_USERID_FOUND: {
-//			Toast.makeText(getActivity(), R.string.userid_found,
-//					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(getActivity(), R.string.userid_found,
+			// Toast.LENGTH_SHORT).show();
 		}
 			break;
 		case MSG_LOGIN: {
@@ -189,7 +190,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		return true;
 	}
 
-	private void requestUser(String un, String pw, String au, String s) {
+	private void requestUser(String un, String pw, String au, String token,
+			String s) {
 		if (request != null) {
 			mapiService().abort(request, LoginFragment.this, true);
 		}
@@ -197,11 +199,18 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		map.put("UserName", un);
 		map.put("Password", pw);
 		map.put("AvatarUrl", au);
+		map.put("ThirdToken", token);
 		map.put("Signature", s);
-		request = APIRequest
-				.mapiPostJson(
-						"http://web358082.dnsvhost.com/ACservice/ACService.svc/CreateUser",
-						CreateUserResult.class, map);
+		if (pw != null) {
+			request = APIRequest.mapiGet(
+					"http://web358082.dnsvhost.com/ACservice/ACService.svc/Login/"
+							+ un + "/" + pw, CacheType.DISABLED,
+					CreateUserResult.class);
+		} else {
+			request = APIRequest.mapiPostJson(
+					"http://web358082.dnsvhost.com/ACservice/ACService.svc/Login",
+					CreateUserResult.class, map);
+		}
 		mapiService().exec(request, LoginFragment.this);
 	}
 
@@ -252,11 +261,11 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 			String userId = plat.getDb().getUserId();
 			if (!TextUtils.isEmpty(userId)) {
 				UIHandler.sendEmptyMessage(MSG_USERID_FOUND, this);
-//				gotoRegister("username=" + plat.getDb().getUserName()
-//						+ "&useravatar=" + plat.getDb().getUserIcon());
+				// gotoRegister("username=" + plat.getDb().getUserName()
+				// + "&useravatar=" + plat.getDb().getUserIcon());
 				un = plat.getDb().getUserName();
 				ua = plat.getDb().getUserIcon();
-				requestUser(un, plat.getDb().getToken(), ua, null);
+				requestUser(un, null, ua, plat.getDb().getToken(), null);
 				if (plat instanceof SinaWeibo) {
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());

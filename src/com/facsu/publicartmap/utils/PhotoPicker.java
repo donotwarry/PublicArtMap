@@ -85,8 +85,8 @@ public class PhotoPicker {
 						REQUEST_CODE_PHOTO_PICKED);
 			}
 
-		} catch (ActivityNotFoundException e) {
-
+		} catch (Exception e) {
+			e.printStackTrace();
 			if (mContext != null) {
 				Toast.makeText(mContext, "手机上没有照片。", Toast.LENGTH_LONG).show();
 			} else if (fragment != null && fragment.getActivity() != null) {

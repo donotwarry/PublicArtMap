@@ -18,26 +18,23 @@ public class MainActivity extends PMTabActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (savedInstanceState == null) {
-			if (MapUtils.isSupportGoogleMap(getApplicationContext())) {
-				addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
-						R.drawable.tab_explore), ExploreGMapFragment.class);
-			} else {
-				addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
-						R.drawable.tab_explore),ExploreFragment.class);
-			}
-			
-			addTab(setIndicatorImage(tabHost.newTabSpec("barcode"),
-					R.drawable.tab_barcode), BarcodeFragment.class);
-			addTab(setIndicatorImage(tabHost.newTabSpec("me"), R.drawable.tab_me),
-					MeFragment.class);
-		}
-		
+		// if (MapUtils.isSupportGoogleMap(getApplicationContext())) {
+		// addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
+		// R.drawable.tab_explore), ExploreGMapFragment.class);
+		// } else {
+		addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
+				R.drawable.tab_explore), ExploreFragment.class);
+		// }
+		addTab(setIndicatorImage(tabHost.newTabSpec("barcode"),
+				R.drawable.tab_barcode), BarcodeFragment.class);
+		addTab(setIndicatorImage(tabHost.newTabSpec("me"), R.drawable.tab_me),
+				MeFragment.class);
+
 		ShareSDK.initSDK(this);
-		
+
 		UmengUpdateAgent.update(this);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		ShareSDK.stopSDK(this);
