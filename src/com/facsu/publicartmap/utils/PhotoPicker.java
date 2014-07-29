@@ -193,20 +193,17 @@ public class PhotoPicker {
 	}
 
 	protected Intent getPhotoPickIntent() {
-		Intent intent = new Intent();
-		intent.addCategory(Intent.CATEGORY_OPENABLE);
-		intent.setType("image/*");
+		Intent intent;
 		if (Build.VERSION.SDK_INT < 19) {
-			intent.setAction(Intent.ACTION_GET_CONTENT);
+			Intent i = new Intent();
+			i.setType("image/jpeg");
+			i.setAction(Intent.ACTION_GET_CONTENT);
+			intent = Intent.createChooser(i, "Select Picture");
 		} else {
-			intent.setAction("android.intent.action.OPEN_DOCUMENT");
+			intent = new Intent(Intent.ACTION_GET_CONTENT);
+			intent.addCategory(Intent.CATEGORY_OPENABLE);
+			intent.setType("image/jpeg");
 		}
-		intent.putExtra("crop", "true");
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
-		intent.putExtra("outputX", outputX());
-		intent.putExtra("outputY", outputY());
-		intent.putExtra("return-data", true);
 		return intent;
 	}
 
