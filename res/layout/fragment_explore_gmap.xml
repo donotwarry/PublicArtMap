@@ -10,11 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.google.android.gms.maps.MapView
-            android:id="@id/mapview"
+        <fragment
+            android:id="@+id/mapview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="true" />
+            class="com.google.android.gms.maps.SupportMapFragment" />
 
         <ImageView
             android:id="@+id/mylocation"

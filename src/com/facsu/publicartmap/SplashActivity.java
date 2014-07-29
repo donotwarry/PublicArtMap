@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.view.Window;
 
 import com.facsu.publicartmap.app.PMActivity;
-import com.umeng.analytics.MobclickAgent;
 
 public class SplashActivity extends PMActivity {
 
@@ -23,7 +22,6 @@ public class SplashActivity extends PMActivity {
 			};
 		}.sendEmptyMessageDelayed(0, 1000);
 
-		MobclickAgent.updateOnlineConfig(this);
 	}
 
 	@Override

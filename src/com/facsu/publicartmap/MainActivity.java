@@ -18,13 +18,13 @@ public class MainActivity extends PMTabActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// if (MapUtils.isSupportGoogleMap(getApplicationContext())) {
-		// addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
-		// R.drawable.tab_explore), ExploreGMapFragment.class);
-		// } else {
-		addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
-				R.drawable.tab_explore), ExploreFragment.class);
-		// }
+		if (MapUtils.isSupportGoogleMap(getApplicationContext())) {
+			addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
+					R.drawable.tab_explore), ExploreGMapFragment.class);
+		} else {
+			addTab(setIndicatorImage(tabHost.newTabSpec("explore"),
+					R.drawable.tab_explore), ExploreFragment.class);
+		}
 		addTab(setIndicatorImage(tabHost.newTabSpec("barcode"),
 				R.drawable.tab_barcode), BarcodeFragment.class);
 		addTab(setIndicatorImage(tabHost.newTabSpec("me"), R.drawable.tab_me),

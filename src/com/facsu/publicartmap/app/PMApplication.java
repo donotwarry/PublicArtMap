@@ -11,6 +11,8 @@ import com.baidu.mapapi.BMapManager;
 import com.dennytech.common.app.CLApplication;
 import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.common.LocationListener;
+import com.facsu.publicartmap.utils.MapUtils;
+import com.umeng.analytics.MobclickAgent;
 
 public class PMApplication extends CLApplication implements BDLocationListener{
 	
@@ -37,6 +39,15 @@ public class PMApplication extends CLApplication implements BDLocationListener{
 			mapManager.start();
 		}
 		return mapManager;
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		
+		MobclickAgent.updateOnlineConfig(this);
+		String value = MobclickAgent.getConfigParams(this, "enableGoogleMap");
+		MapUtils.setEnableGoogleMap(Boolean.valueOf(value));
 	}
 	
 	@Override
@@ -69,7 +80,13 @@ public class PMApplication extends CLApplication implements BDLocationListener{
 		LocationClientOption option = new LocationClientOption();
 		option.setOpenGps(true);
 		option.setAddrType("all");
-		option.setCoorType("bd09ll");
+		
+		if (MapUtils.isSupportGoogleMap(this)) {
+			option.setCoorType("gcj02");//google
+		} else {
+			option.setCoorType("bd09ll");// baidu
+		}
+		
 		option.setPriority(LocationClientOption.NetWorkFirst);
 		option.setScanSpan(60000);
 		locClient.setLocOption(option);

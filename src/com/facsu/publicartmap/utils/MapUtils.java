@@ -1,9 +1,17 @@
 package com.facsu.publicartmap.utils;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MapUtils {
+
+	private static boolean enableGoogleMap;
+	
+	public static void setEnableGoogleMap(boolean enable) {
+		enableGoogleMap = enable;
+	}
 
 	private static final double EARTH_RADIUS = 6378.137;
 
@@ -32,13 +40,11 @@ public class MapUtils {
 	 * @return
 	 */
 	public static boolean isSupportGoogleMap(Context context) {
-		try {
-			ApplicationInfo info = context.getPackageManager()
-					.getApplicationInfo("com.google.android.apps.maps", 0);
-			return true;
-		} catch (Exception e) {
+		if (!enableGoogleMap) {
 			return false;
 		}
+
+		return GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
 	}
 
 }

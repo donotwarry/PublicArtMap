@@ -23,17 +23,17 @@ public class PMGMapFragment extends SupportMapFragment {
 
 	private TitleBar titleBar;
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		MobclickAgent.onPageStart(getClass().getSimpleName());
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		MobclickAgent.onPageEnd(getClass().getSimpleName());
-	}
+//	@Override
+//	public void onResume() {
+//		super.onResume();
+//		MobclickAgent.onPageStart(getClass().getSimpleName());
+//	}
+//
+//	@Override
+//	public void onStop() {
+//		super.onStop();
+//		MobclickAgent.onPageEnd(getClass().getSimpleName());
+//	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -65,83 +65,83 @@ public class PMGMapFragment extends SupportMapFragment {
 	public void setTitle(int resId) {
 		setTitle(getString(resId));
 	}
-	
+
 	public MApiService mapiService() {
 		return PMApplication.instance().mapiService();
 	}
-	
+
 	// ////////////
-		// Dialog相关
-		// ////////////
+	// Dialog相关
+	// ////////////
 
-		protected Dialog managedDialog;
+	protected Dialog managedDialog;
 
-		/**
-		 * 显示progress对话框 </br></br> progress对话框应该只在<b>主线程</b>中被显示
-		 * 
-		 * @param message
-		 */
-		final public void showProgressDialog(String message) {
-			dismissDialog();
-			ProgressDialog dlg = new ProgressDialog(getActivity());
-			dlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					onProgressDialogCancel();
-				}
-			});
-			dlg.setMessage(message);
-
-			managedDialog = dlg;
-			dlg.show();
-		}
-
-		protected void onProgressDialogCancel() {
-			// TO OVERRIDE
-		}
-
-		final public void showDialog(String title, String message,
-				DialogInterface.OnClickListener listener) {
-			dismissDialog();
-			AlertDialog dlg = createDialog(title, message);
-			dlg.setButton(DialogInterface.BUTTON_POSITIVE, "确定", listener);
-
-			managedDialog = dlg;
-			dlg.show();
-		}
-
-		final public void showDialog(String title, String message,
-				String positiveText,
-				DialogInterface.OnClickListener positiveListener,
-				String negativeText,
-				DialogInterface.OnClickListener negativeListener) {
-			dismissDialog();
-			AlertDialog dlg = createDialog(title, message);
-			dlg.setButton(DialogInterface.BUTTON_POSITIVE, positiveText,
-					positiveListener);
-			dlg.setButton(DialogInterface.BUTTON_NEGATIVE, negativeText,
-					negativeListener);
-
-			managedDialog = dlg;
-			dlg.show();
-		}
-
-		final public AlertDialog createDialog(String title, String message) {
-			AlertDialog dlg = new AlertDialog.Builder(getActivity()).create();
-			dlg.setTitle(title);
-			dlg.setMessage(message);
-
-			managedDialog = dlg;
-			return dlg;
-		}
-
-		final public void dismissDialog() {
-			if (managedDialog != null && managedDialog.isShowing()) {
-				managedDialog.dismiss();
+	/**
+	 * 显示progress对话框 </br></br> progress对话框应该只在<b>主线程</b>中被显示
+	 * 
+	 * @param message
+	 */
+	final public void showProgressDialog(String message) {
+		dismissDialog();
+		ProgressDialog dlg = new ProgressDialog(getActivity());
+		dlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				onProgressDialogCancel();
 			}
-			managedDialog = null;
+		});
+		dlg.setMessage(message);
+
+		managedDialog = dlg;
+		dlg.show();
+	}
+
+	protected void onProgressDialogCancel() {
+		// TO OVERRIDE
+	}
+
+	final public void showDialog(String title, String message,
+			DialogInterface.OnClickListener listener) {
+		dismissDialog();
+		AlertDialog dlg = createDialog(title, message);
+		dlg.setButton(DialogInterface.BUTTON_POSITIVE, "确定", listener);
+
+		managedDialog = dlg;
+		dlg.show();
+	}
+
+	final public void showDialog(String title, String message,
+			String positiveText,
+			DialogInterface.OnClickListener positiveListener,
+			String negativeText,
+			DialogInterface.OnClickListener negativeListener) {
+		dismissDialog();
+		AlertDialog dlg = createDialog(title, message);
+		dlg.setButton(DialogInterface.BUTTON_POSITIVE, positiveText,
+				positiveListener);
+		dlg.setButton(DialogInterface.BUTTON_NEGATIVE, negativeText,
+				negativeListener);
+
+		managedDialog = dlg;
+		dlg.show();
+	}
+
+	final public AlertDialog createDialog(String title, String message) {
+		AlertDialog dlg = new AlertDialog.Builder(getActivity()).create();
+		dlg.setTitle(title);
+		dlg.setMessage(message);
+
+		managedDialog = dlg;
+		return dlg;
+	}
+
+	final public void dismissDialog() {
+		if (managedDialog != null && managedDialog.isShowing()) {
+			managedDialog.dismiss();
 		}
-	
+		managedDialog = null;
+	}
+
 	private SharedPreferences sharePref;
 
 	public SharedPreferences preferences() {
@@ -151,7 +151,7 @@ public class PMGMapFragment extends SupportMapFragment {
 		}
 		return sharePref;
 	}
-	
+
 	//
 	// login & register
 	//
@@ -181,7 +181,7 @@ public class PMGMapFragment extends SupportMapFragment {
 	public void onLoginCancel() {
 		// sub class implement
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
