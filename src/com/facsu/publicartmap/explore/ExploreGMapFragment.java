@@ -35,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -47,7 +48,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class ExploreGMapFragment extends PMFragment implements
 		LocationListener, OnClickListener, MApiRequestHandler,
 		OnMyLocationButtonClickListener, OnMarkerClickListener,
-		OnCameraChangeListener {
+		OnCameraChangeListener, OnInfoWindowClickListener {
 
 	private static final int DEFAULT_ZOOM_LEVEL = 12;
 
@@ -62,6 +63,7 @@ public class ExploreGMapFragment extends PMFragment implements
 	private MApiRequest request;
 	private Artwork[] data;
 	private Location myLoc;
+	private Marker curMarker;
 
 	private Map<Marker, Artwork> markerMap = new HashMap<Marker, Artwork>();
 
@@ -81,6 +83,7 @@ public class ExploreGMapFragment extends PMFragment implements
 		map.setOnMarkerClickListener(this);
 		map.setOnCameraChangeListener(this);
 		map.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+		map.setOnInfoWindowClickListener(this);
 		progress = rootView.findViewById(R.id.progressbar);
 		return rootView;
 	}
@@ -255,6 +258,30 @@ public class ExploreGMapFragment extends PMFragment implements
 
 	@Override
 	public boolean onMarkerClick(Marker marker) {
+		curMarker = marker;
+		return false;
+	}
+
+	@Override
+	public void onCameraChange(CameraPosition cp) {
+		do {
+			if (curMarker == null) {
+				break;
+			}
+
+			LatLng target = cp.target;
+			if (curMarker.getPosition().latitude == target.latitude
+					&& curMarker.getPosition().longitude == target.longitude) {
+				return;
+			}
+
+		} while (false);
+
+		refereshData();
+	}
+
+	@Override
+	public void onInfoWindowClick(Marker marker) {
 		Artwork aw = markerMap.get(marker);
 		Intent intent = new Intent(Intent.ACTION_VIEW,
 				Uri.parse("pam://artworkinfo?id=" + aw.ArtworkID));
@@ -262,12 +289,6 @@ public class ExploreGMapFragment extends PMFragment implements
 			intent.putExtra("location", myLoc);
 		}
 		startActivity(intent);
-		return false;
-	}
-
-	@Override
-	public void onCameraChange(CameraPosition arg0) {
-		refereshData();
 	}
 
 	class CustomInfoWindowAdapter implements InfoWindowAdapter {
@@ -276,7 +297,7 @@ public class ExploreGMapFragment extends PMFragment implements
 
 		public CustomInfoWindowAdapter() {
 			popView = (PopupView) getActivity().getLayoutInflater().inflate(
-					R.layout.layout_pop, null);
+					R.layout.layout_pop_gmap, null);
 		}
 
 		@Override

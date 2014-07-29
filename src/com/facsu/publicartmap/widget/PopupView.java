@@ -1,7 +1,9 @@
 package com.facsu.publicartmap.widget;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ public class PopupView extends LinearLayout {
 
 	private TextView title;
 	private TextView content;
+	private TextView author;
 
 	public PopupView(Context context) {
 		this(context, null);
@@ -29,6 +32,7 @@ public class PopupView extends LinearLayout {
 		super.onFinishInflate();
 		title = (TextView) findViewById(R.id.title);
 		content = (TextView) findViewById(R.id.content);
+		author = (TextView) findViewById(R.id.author);
 	}
 
 	public void setData(Artwork data, Location myLoc) {
@@ -49,6 +53,13 @@ public class PopupView extends LinearLayout {
 		}
 		title.setText(disStr);
 		content.setText(TextPicker.pick(getContext(), data.ArtworkName));
+		String artist = data.Artist;
+		if (TextUtils.isEmpty(artist)) {
+			author.setVisibility(View.GONE);
+		} else {
+			author.setText(getString(R.string.pop_author) + data.Artist);
+			author.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private String getString(int resId) {
