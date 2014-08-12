@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.app.AlertDialog;
@@ -17,6 +19,8 @@ import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayout;
+import android.support.v7.widget.GridLayout.LayoutParams;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
@@ -39,6 +43,7 @@ import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.bean.UploadImageResult;
 import com.facsu.publicartmap.bean.User;
 import com.facsu.publicartmap.common.APIRequest;
+import com.facsu.publicartmap.utils.OKSUtils;
 import com.facsu.publicartmap.utils.PhotoPicker;
 
 public class ShareArtworkActivity extends PMActivity implements
@@ -48,15 +53,18 @@ public class ShareArtworkActivity extends PMActivity implements
 			.getSimpleName();
 
 	private TextView addressTv;
+	private GridLayout shareGrid;
 	private ImageView sharePhoto;
 	private EditText input;
 
 	private Location location;
-	private Bitmap showBitmap;
+	private List<Bitmap> showBitmaps = new ArrayList<Bitmap>();
 	private String strImgPath;
 
 	private MApiRequest createReq;
 	private MApiRequest uploadImgReq;
+	
+	private String artworkID;
 
 	private PhotoPicker photoPicker = new PhotoPicker(this) {
 		protected Intent getPhotoPickIntent() {
@@ -92,6 +100,7 @@ public class ShareArtworkActivity extends PMActivity implements
 
 		addressTv = (TextView) findViewById(R.id.share_location);
 		addressTv.setText(location.address);
+		shareGrid = (GridLayout) findViewById(R.id.share_photo_grid);
 		sharePhoto = (ImageView) findViewById(R.id.share_add_photo);
 		sharePhoto.setOnClickListener(this);
 		input = (EditText) findViewById(R.id.input);
@@ -135,7 +144,7 @@ public class ShareArtworkActivity extends PMActivity implements
 	}
 
 	private void createArtwork() {
-		if (showBitmap == null) {
+		if (showBitmaps.size() == 0) {
 			showDialog(getString(R.string.app_name),
 					getString(R.string.msg_take_photo_first), null);
 			return;
@@ -176,8 +185,8 @@ public class ShareArtworkActivity extends PMActivity implements
 		showProgressDialog(getString(R.string.msg_submiting));
 	}
 
-	private void uploadImage(String aid) {
-		if (showBitmap == null) {
+	private void uploadImage() {
+		if (showBitmaps.size() == 0) {
 			return;
 		}
 
@@ -188,12 +197,13 @@ public class ShareArtworkActivity extends PMActivity implements
 		User user = User.read(preferences());
 
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("ImageData", bitmapToBase64(showBitmap));
+		Bitmap waitBm = showBitmaps.remove(0);
+		map.put("ImageData", bitmapToBase64(waitBm));
 		map.put("ImageDesc", "");
 		map.put("ImageSource", "");
 		uploadImgReq = APIRequest.mapiPostJson(
 				"http://web358082.dnsvhost.com/ACservice/ACService.svc/UploadImage/"
-						+ aid + "/" + user.UID,
+						+ artworkID + "/" + user.UID,
 				UploadImageResult.class, map);
 		mapiService().exec(uploadImgReq, this);
 	}
@@ -285,29 +295,42 @@ public class ShareArtworkActivity extends PMActivity implements
 					strImgPath = photoPicker.parseImgPath(data);
 				}
 				if (!TextUtils.isEmpty(strImgPath)) {
-					sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
+//					sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
+					addThumb(parseThumbnail(strImgPath));
 				}
 				break;
 			case PhotoPicker.REQUEST_CODE_PHOTO_PICKED:
 				if (Build.VERSION.SDK_INT < 19) {
 					strImgPath = photoPicker.parseImgPath(data);
 					if (!TextUtils.isEmpty(strImgPath)) {
-						sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
+//						sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
+						addThumb(parseThumbnail(strImgPath));
 					}
 				} else {
 					if (data != null) {
-						sharePhoto
-								.setImageBitmap(parseThumbnail(data.getData()));
+//						sharePhoto
+//								.setImageBitmap(parseThumbnail(data.getData()));
+						addThumb(parseThumbnail(data.getData()));
 					}
 				}
 				break;
 			}
 		}
-
+	}
+	
+	private void addThumb(Bitmap bitmap) {
+		ImageView thumb = new ImageView(this);
+		LayoutParams lp = new LayoutParams();
+		lp.setMargins(OKSUtils.dip2px(this, 8), 0, 0, 0);
+		lp.width = OKSUtils.dip2px(this, 70);
+		lp.height = OKSUtils.dip2px(this, 70);
+		thumb.setLayoutParams(lp);
+		thumb.setImageBitmap(bitmap);
+		int num = shareGrid.getChildCount();
+		shareGrid.addView(thumb, num - 1);
 	}
 
 	private Bitmap parseThumbnail(String file) {
-		System.gc();
 		int sampling = 1;
 		try {
 			FileInputStream ins = new FileInputStream(file);
@@ -329,7 +352,7 @@ public class ShareArtworkActivity extends PMActivity implements
 			return null;
 		}
 
-		showBitmap = null;
+		Bitmap showBitmap = null;
 
 		for (; sampling <= 8 && showBitmap == null; sampling *= 2) {
 			try {
@@ -348,11 +371,12 @@ public class ShareArtworkActivity extends PMActivity implements
 			}
 		}
 
+		showBitmaps.add(showBitmap);
+		
 		return showBitmap;
 	}
 
 	private Bitmap parseThumbnail(Uri data) {
-		System.gc();
 		int sampling = 1;
 		try {
 			InputStream ins = getContentResolver().openInputStream(data);
@@ -374,7 +398,7 @@ public class ShareArtworkActivity extends PMActivity implements
 			return null;
 		}
 
-		showBitmap = null;
+		Bitmap showBitmap = null;
 
 		for (; sampling <= 8 && showBitmap == null; sampling *= 2) {
 			try {
@@ -392,6 +416,8 @@ public class ShareArtworkActivity extends PMActivity implements
 				return null;
 			}
 		}
+		
+		showBitmaps.add(showBitmap);
 
 		return showBitmap;
 	}
@@ -411,7 +437,8 @@ public class ShareArtworkActivity extends PMActivity implements
 				CreateArtworkResult result = (CreateArtworkResult) resp
 						.result();
 				if (!result.CreateArtworkResult.hasError()) {
-					uploadImage(result.CreateArtworkResult.ID);
+					artworkID = result.CreateArtworkResult.ID;
+					uploadImage();
 					Log.i(TAG, "create artwork success, start upload image...");
 
 				} else {
@@ -422,20 +449,24 @@ public class ShareArtworkActivity extends PMActivity implements
 			}
 
 		} else if (req == uploadImgReq) {
-			dismissDialog();
-			if (resp.result() instanceof UploadImageResult) {
-				UploadImageResult result = (UploadImageResult) resp.result();
-				if (!result.UploadImageResult.hasError()) {
-					showDialog(getString(R.string.app_name),
-							getString(R.string.msg_upload_success), null);
-					return;
+			if (showBitmaps.size() == 0) {
+				dismissDialog();
+				if (resp.result() instanceof UploadImageResult) {
+					UploadImageResult result = (UploadImageResult) resp.result();
+					if (!result.UploadImageResult.hasError()) {
+						showDialog(getString(R.string.app_name),
+								getString(R.string.msg_upload_success), null);
+						return;
+					} else {
+						showDialog(getString(R.string.app_name),
+								result.UploadImageResult.ErrorDesc, null);
+					}
 				} else {
-					showDialog(getString(R.string.app_name),
-							result.UploadImageResult.ErrorDesc, null);
+					Toast.makeText(this, getString(R.string.msg_failed),
+							Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				Toast.makeText(this, getString(R.string.msg_failed),
-						Toast.LENGTH_SHORT).show();
+				uploadImage();
 			}
 		}
 	}

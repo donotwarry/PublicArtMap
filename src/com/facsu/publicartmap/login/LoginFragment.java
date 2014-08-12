@@ -21,7 +21,6 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 
-import com.dennytech.common.service.dataservice.mapi.CacheType;
 import com.dennytech.common.service.dataservice.mapi.MApiRequest;
 import com.dennytech.common.service.dataservice.mapi.MApiRequestHandler;
 import com.dennytech.common.service.dataservice.mapi.MApiResponse;
@@ -112,7 +111,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 				// + "&useravatar=" + plat.getDb().getUserIcon());
 				un = plat.getDb().getUserName();
 				ua = plat.getDb().getUserIcon();
-				requestUser(un, null, ua, plat.getDb().getToken(), null);
+				requestUser(un, null, ua, plat.getDb().getPlatformNname() + "|"
+						+ plat.getDb().getUserId(), null);
 				if (plat instanceof SinaWeibo) {
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
@@ -201,16 +201,9 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		map.put("AvatarUrl", au);
 		map.put("ThirdToken", token);
 		map.put("Signature", s);
-		if (pw != null) {
-			request = APIRequest.mapiGet(
-					"http://web358082.dnsvhost.com/ACservice/ACService.svc/Login/"
-							+ un + "/" + pw, CacheType.DISABLED,
-					CreateUserResult.class);
-		} else {
-			request = APIRequest.mapiPostJson(
-					"http://web358082.dnsvhost.com/ACservice/ACService.svc/Login",
-					CreateUserResult.class, map);
-		}
+		request = APIRequest.mapiPostJson(
+				"http://web358082.dnsvhost.com/ACservice/ACService.svc/Login",
+				CreateUserResult.class, map);
 		mapiService().exec(request, LoginFragment.this);
 	}
 
@@ -265,7 +258,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 				// + "&useravatar=" + plat.getDb().getUserIcon());
 				un = plat.getDb().getUserName();
 				ua = plat.getDb().getUserIcon();
-				requestUser(un, null, ua, plat.getDb().getToken(), null);
+				requestUser(un, null, ua, plat.getDb().getPlatformNname() + "|"
+						+ plat.getDb().getUserId(), null);
 				if (plat instanceof SinaWeibo) {
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
