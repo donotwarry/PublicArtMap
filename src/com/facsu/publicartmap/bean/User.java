@@ -11,6 +11,8 @@ public class User {
 	public String Signature;
 	public String Role;
 	public String CreationDate;
+	public String ThirdID;
+	public String ThirdType;
 
 	public User(int uid, String name, String avatar) {
 		this.UID = uid;

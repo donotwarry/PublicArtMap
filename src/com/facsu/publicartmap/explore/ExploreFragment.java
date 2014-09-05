@@ -1,5 +1,6 @@
 package com.facsu.publicartmap.explore;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -44,6 +45,8 @@ import com.facsu.publicartmap.widget.PopupView;
 
 public class ExploreFragment extends PMMapFragment implements LocationListener,
 		OnClickListener, MKMapViewListener, MApiRequestHandler {
+	
+	private static final int REQUEST_CODE_SHARE = 1;
 
 	private View rootView;
 	private Location myLoc;
@@ -151,6 +154,13 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 		}
 		super.onDestroy();
 	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_CODE_SHARE && resultCode == Activity.RESULT_OK) {
+			Toast.makeText(getActivity(), "aaaaaa", Toast.LENGTH_SHORT).show();
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -167,7 +177,7 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 				if (myLoc != null) {
 					i.putExtra("location", myLoc);
 				}
-				startActivity(i);
+				startActivityForResult(i, REQUEST_CODE_SHARE);
 			}
 
 		} else if (v.getId() == R.id.mylocation) {

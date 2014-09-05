@@ -85,7 +85,7 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		if (v == login) {
 			if (checkInput()) {
 				showProgressDialog(getString(R.string.msg_logining));
-				requestUser(un, pw, ua, null, null);
+				requestUser(un, pw, ua, null, null, null);
 			}
 		} else if (v == loginBySinaWeibo) {
 			authorize(new SinaWeibo(getActivity()));
@@ -111,8 +111,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 				// + "&useravatar=" + plat.getDb().getUserIcon());
 				un = plat.getDb().getUserName();
 				ua = plat.getDb().getUserIcon();
-				requestUser(un, null, ua, plat.getDb().getPlatformNname() + "|"
-						+ plat.getDb().getUserId(), null);
+				requestUser(un, null, ua, plat.getDb().getUserId(), plat
+						.getDb().getPlatformNname(), null);
 				if (plat instanceof SinaWeibo) {
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
@@ -190,8 +190,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		return true;
 	}
 
-	private void requestUser(String un, String pw, String au, String token,
-			String s) {
+	private void requestUser(String un, String pw, String au, String thirdID,
+			String thirdType, String s) {
 		if (request != null) {
 			mapiService().abort(request, LoginFragment.this, true);
 		}
@@ -199,7 +199,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		map.put("UserName", un);
 		map.put("Password", pw);
 		map.put("AvatarUrl", au);
-		map.put("ThirdToken", token);
+		map.put("ThirdID", thirdID);
+		map.put("ThirdType", thirdType);
 		map.put("Signature", s);
 		request = APIRequest.mapiPostJson(
 				"http://web358082.dnsvhost.com/ACservice/ACService.svc/Login",
@@ -258,8 +259,8 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 				// + "&useravatar=" + plat.getDb().getUserIcon());
 				un = plat.getDb().getUserName();
 				ua = plat.getDb().getUserIcon();
-				requestUser(un, null, ua, plat.getDb().getPlatformNname() + "|"
-						+ plat.getDb().getUserId(), null);
+				requestUser(un, null, ua, plat.getDb().getUserId(), plat
+						.getDb().getPlatformNname(), null);
 				if (plat instanceof SinaWeibo) {
 					Environment.saveSinaAvatar(preferences(), plat.getDb()
 							.getUserName(), plat.getDb().getUserIcon());
