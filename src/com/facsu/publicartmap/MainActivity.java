@@ -1,5 +1,6 @@
 package com.facsu.publicartmap;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import cn.sharesdk.framework.ShareSDK;
@@ -44,6 +45,11 @@ public class MainActivity extends PMTabActivity {
 	@Override
 	protected int customTitleType() {
 		return Window.FEATURE_NO_TITLE;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

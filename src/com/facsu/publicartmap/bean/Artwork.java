@@ -51,7 +51,14 @@ public class Artwork implements Parcelable{
 		SubmitterName = source.readString();
 		Type = source.readString();
 		VoteCount = source.readInt();
-    }  
+    }
+	
+	public Artwork(String Artist, String ArtworkName, String Latitude, String Longitude) {
+		this.Artist = Artist;
+		this.ArtworkName = ArtworkName;
+		this.Latitude = Latitude;
+		this.Longitude = Longitude;
+	}
 	
 	@Override
 	public int describeContents() {

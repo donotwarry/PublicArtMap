@@ -1,5 +1,8 @@
 package com.facsu.publicartmap.explore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,7 +48,7 @@ import com.facsu.publicartmap.widget.PopupView;
 
 public class ExploreFragment extends PMMapFragment implements LocationListener,
 		OnClickListener, MKMapViewListener, MApiRequestHandler {
-	
+
 	private static final int REQUEST_CODE_SHARE = 1;
 
 	private View rootView;
@@ -61,8 +64,9 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 	boolean isClickOnPop = false;
 
 	private MApiRequest request;
-	private Artwork[] data;
+	private List<Artwork> data = new ArrayList<Artwork>();
 	private Artwork curArtwork;
+	private List<Artwork> shares = new ArrayList<Artwork>();
 	private GeoPoint curGP;
 
 	@Override
@@ -101,13 +105,20 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 				}
 
 				Artwork aw = curArtwork;
+				curArtwork = null;
+
+				if (aw.ArtworkID == null) {
+					Toast.makeText(getActivity(), getString(R.string.shareing),
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+
 				Intent intent = new Intent(Intent.ACTION_VIEW,
 						Uri.parse("pam://artworkinfo?id=" + aw.ArtworkID));
 				if (myLoc != null) {
 					intent.putExtra("location", myLoc);
 				}
 				startActivity(intent);
-				curArtwork = null;
 			}
 
 		};
@@ -154,11 +165,15 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 		}
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_CODE_SHARE && resultCode == Activity.RESULT_OK) {
+		if (requestCode == REQUEST_CODE_SHARE
+				&& resultCode == Activity.RESULT_OK) {
 			Toast.makeText(getActivity(), "aaaaaa", Toast.LENGTH_SHORT).show();
+			Artwork share = data.getParcelableExtra("share");
+			shares.add(share);
+			showData();
 		}
 	}
 
@@ -219,15 +234,25 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 			resultOverlay.removeAll();
 		}
 
+		if (shares.size() > 0) {
+			data.addAll(shares);
+		}
 		for (Artwork artwork : data) {
 			GeoPoint gp = new GeoPoint(
 					(int) (Double.valueOf(artwork.Latitude) * 1E6),
 					(int) (Double.valueOf(artwork.Longitude) * 1E6));
 			OverlayItem item = new OverlayItem(gp, TextPicker.pick(
 					getActivity(), artwork.ArtworkName), "");
+			if ("Official".equals(artwork.Type)) {
+				item.setMarker(getResources()
+						.getDrawable(R.drawable.icon_marka));
+			} else {
+				item.setMarker(getResources()
+						.getDrawable(R.drawable.icon_markb));
+			}
 			resultOverlay.addItem(item);
 		}
-		
+
 		mapView().refresh();
 	}
 
@@ -317,7 +342,10 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 		if (resp.result() instanceof GetArtworksByGPSResult) {
 			GetArtworksByGPSResult result = (GetArtworksByGPSResult) resp
 					.result();
-			data = result.result();
+			data.clear();
+			for (Artwork artwork : result.result()) {
+				data.add(artwork);
+			}
 			showData();
 		}
 	}
@@ -339,7 +367,7 @@ public class ExploreFragment extends PMMapFragment implements LocationListener,
 		@Override
 		public boolean onTap(int index) {
 			pop.hidePop();
-			Artwork aw = data[index];
+			Artwork aw = data.get(index);
 			curArtwork = aw;
 			popView.setData(aw, myLoc);
 			curGP = new GeoPoint((int) (Double.valueOf(aw.Latitude) * 1E6),

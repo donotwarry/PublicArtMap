@@ -20,7 +20,10 @@
     <string name="text_agreen">同意</string>
     <string name="text_reject">不同意</string>
     <string name="pop_author">作者：</string>
+    <string name="shareing">作品还在等待审核，请稍后再试</string>
     
+    <!-- share artwork -->
+    <string name="my_share">我的分享</string>
 
     <!-- artworkinfo -->
     <string name="artwork_name">作品名称：</string>

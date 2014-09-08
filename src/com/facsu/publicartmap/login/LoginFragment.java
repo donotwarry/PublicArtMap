@@ -26,7 +26,7 @@ import com.dennytech.common.service.dataservice.mapi.MApiRequestHandler;
 import com.dennytech.common.service.dataservice.mapi.MApiResponse;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMFragment;
-import com.facsu.publicartmap.bean.CreateUserResult;
+import com.facsu.publicartmap.bean.LoginResult;
 import com.facsu.publicartmap.bean.User;
 import com.facsu.publicartmap.common.APIRequest;
 import com.facsu.publicartmap.common.Environment;
@@ -204,7 +204,7 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 		map.put("Signature", s);
 		request = APIRequest.mapiPostJson(
 				"http://web358082.dnsvhost.com/ACservice/ACService.svc/Login",
-				CreateUserResult.class, map);
+				LoginResult.class, map);
 		mapiService().exec(request, LoginFragment.this);
 	}
 
@@ -219,10 +219,17 @@ public class LoginFragment extends PMFragment implements MApiRequestHandler,
 	@Override
 	public void onRequestFinish(MApiRequest req, MApiResponse resp) {
 		dismissDialog();
-		if (resp.result() instanceof CreateUserResult) {
-			CreateUserResult result = (CreateUserResult) resp.result();
-			User user = new User(Integer.valueOf(result.CreateUserResult.ID),
-					un, ua);
+		if (resp.result() instanceof LoginResult) {
+			LoginResult result = (LoginResult) resp.result();
+			if (result == null || result.LoginResult == null) {
+				return;
+			}
+			if (result.LoginResult.hasError()) {
+				Toast.makeText(getActivity(), result.LoginResult.ErrorDesc,
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+			User user = new User(Integer.valueOf(result.LoginResult.ID), un, ua);
 			String avatar = Environment.getSinaAvatar(preferences(), un);
 			if (avatar != null && user.AvatarUrl == null) {
 				user.AvatarUrl = avatar;

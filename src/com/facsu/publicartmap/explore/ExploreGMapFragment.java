@@ -1,8 +1,11 @@
 package com.facsu.publicartmap.explore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,6 +42,7 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -51,6 +55,7 @@ public class ExploreGMapFragment extends PMFragment implements
 		OnCameraChangeListener, OnInfoWindowClickListener {
 
 	private static final int DEFAULT_ZOOM_LEVEL = 12;
+	private static final int REQUEST_CODE_SHARE = 1;
 
 	private GoogleMap map;
 	private View rootView;
@@ -61,8 +66,9 @@ public class ExploreGMapFragment extends PMFragment implements
 	boolean isClickOnPop = false;
 
 	private MApiRequest request;
-	private Artwork[] data;
+	private List<Artwork> data = new ArrayList<Artwork>();
 	private Location myLoc;
+	private List<Artwork> shares = new ArrayList<Artwork>();
 	private Marker curMarker;
 
 	private Map<Marker, Artwork> markerMap = new HashMap<Marker, Artwork>();
@@ -126,6 +132,16 @@ public class ExploreGMapFragment extends PMFragment implements
 	}
 
 	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_CODE_SHARE
+				&& resultCode == Activity.RESULT_OK) {
+			Artwork share = data.getParcelableExtra("share");
+			shares.add(share);
+			showData();
+		}
+	}
+
+	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.title_left_btn) {
 			refereshData();
@@ -140,7 +156,7 @@ public class ExploreGMapFragment extends PMFragment implements
 				if (myLoc != null) {
 					i.putExtra("location", myLoc);
 				}
-				startActivity(i);
+				startActivityForResult(i, REQUEST_CODE_SHARE);
 			}
 
 		} else if (v.getId() == R.id.mylocation) {
@@ -201,7 +217,10 @@ public class ExploreGMapFragment extends PMFragment implements
 		if (resp.result() instanceof GetArtworksByGPSResult) {
 			GetArtworksByGPSResult result = (GetArtworksByGPSResult) resp
 					.result();
-			data = result.result();
+			data.clear();
+			for (Artwork artwork : result.result()) {
+				data.add(artwork);
+			}
 			showData();
 		}
 	}
@@ -218,14 +237,23 @@ public class ExploreGMapFragment extends PMFragment implements
 		map.clear();
 		markerMap.clear();
 
+		if (shares.size() > 0) {
+			data.addAll(shares);
+		}
 		for (Artwork artwork : data) {
+			BitmapDescriptor bd;
+			if ("Official".equals(artwork.Type)) {
+				bd = BitmapDescriptorFactory
+						.fromResource(R.drawable.icon_marka);
+			} else {
+				bd = BitmapDescriptorFactory
+						.fromResource(R.drawable.icon_markb);
+			}
 			Marker marker = map.addMarker(new MarkerOptions()
 					.position(
 							new LatLng(Double.valueOf(artwork.Latitude), Double
 									.valueOf(artwork.Longitude)))
-					.title(artwork.ArtworkName)
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.icon_marka))
+					.title(artwork.ArtworkName).icon(bd)
 					.snippet(artwork.Artist));
 			markerMap.put(marker, artwork);
 		}
@@ -283,6 +311,11 @@ public class ExploreGMapFragment extends PMFragment implements
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		Artwork aw = markerMap.get(marker);
+		if (aw.ArtworkID == null) {
+			Toast.makeText(getActivity(), getString(R.string.shareing),
+					Toast.LENGTH_LONG).show();
+			return;
+		}
 		Intent intent = new Intent(Intent.ACTION_VIEW,
 				Uri.parse("pam://artworkinfo?id=" + aw.ArtworkID));
 		if (myLoc != null) {

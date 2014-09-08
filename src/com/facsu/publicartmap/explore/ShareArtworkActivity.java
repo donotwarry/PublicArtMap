@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,6 +39,7 @@ import com.dennytech.common.util.Log;
 import com.facsu.publicartmap.R;
 import com.facsu.publicartmap.app.PMActivity;
 import com.facsu.publicartmap.app.PMApplication;
+import com.facsu.publicartmap.bean.Artwork;
 import com.facsu.publicartmap.bean.CreateArtworkResult;
 import com.facsu.publicartmap.bean.Location;
 import com.facsu.publicartmap.bean.UploadImageResult;
@@ -63,8 +65,9 @@ public class ShareArtworkActivity extends PMActivity implements
 
 	private MApiRequest createReq;
 	private MApiRequest uploadImgReq;
-	
+
 	private String artworkID;
+	private Artwork share;
 
 	private PhotoPicker photoPicker = new PhotoPicker(this) {
 		protected Intent getPhotoPickIntent() {
@@ -156,11 +159,11 @@ public class ShareArtworkActivity extends PMActivity implements
 		if (uploadImgReq != null) {
 			mapiService().abort(uploadImgReq, this, true);
 		}
-		
+
 		User user = User.read(preferences());
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ArtworkName", "我的上传");
+		map.put("ArtworkName", getString(R.string.my_share));
 		map.put("ArtworkDesc", input.getText().toString().trim());
 		map.put("SubmitterID", user.UID);
 		map.put("Country", "");
@@ -176,6 +179,9 @@ public class ShareArtworkActivity extends PMActivity implements
 		map.put("EndYear", "");
 		map.put("StartMonth", "");
 		map.put("EndMonth", "");
+		share = new Artwork(user.UserName, "我的上传",
+				String.valueOf(location.latitude),
+				String.valueOf(location.longitude));
 		createReq = APIRequest
 				.mapiPostJson(
 						"http://web358082.dnsvhost.com/ACservice/ACService.svc/CreateArtwork",
@@ -193,7 +199,7 @@ public class ShareArtworkActivity extends PMActivity implements
 		if (uploadImgReq != null) {
 			mapiService().abort(uploadImgReq, this, true);
 		}
-		
+
 		User user = User.read(preferences());
 
 		Map<String, String> map = new HashMap<String, String>();
@@ -203,8 +209,8 @@ public class ShareArtworkActivity extends PMActivity implements
 		map.put("ImageSource", "");
 		uploadImgReq = APIRequest.mapiPostJson(
 				"http://web358082.dnsvhost.com/ACservice/ACService.svc/UploadImage/"
-						+ artworkID + "/" + user.UID,
-				UploadImageResult.class, map);
+						+ artworkID + "/" + user.UID, UploadImageResult.class,
+				map);
 		mapiService().exec(uploadImgReq, this);
 	}
 
@@ -295,7 +301,7 @@ public class ShareArtworkActivity extends PMActivity implements
 					strImgPath = photoPicker.parseImgPath(data);
 				}
 				if (!TextUtils.isEmpty(strImgPath)) {
-//					sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
+					// sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
 					addThumb(parseThumbnail(strImgPath));
 				}
 				break;
@@ -303,13 +309,13 @@ public class ShareArtworkActivity extends PMActivity implements
 				if (Build.VERSION.SDK_INT < 19) {
 					strImgPath = photoPicker.parseImgPath(data);
 					if (!TextUtils.isEmpty(strImgPath)) {
-//						sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
+						// sharePhoto.setImageBitmap(parseThumbnail(strImgPath));
 						addThumb(parseThumbnail(strImgPath));
 					}
 				} else {
 					if (data != null) {
-//						sharePhoto
-//								.setImageBitmap(parseThumbnail(data.getData()));
+						// sharePhoto
+						// .setImageBitmap(parseThumbnail(data.getData()));
 						addThumb(parseThumbnail(data.getData()));
 					}
 				}
@@ -317,7 +323,7 @@ public class ShareArtworkActivity extends PMActivity implements
 			}
 		}
 	}
-	
+
 	private void addThumb(Bitmap bitmap) {
 		ImageView thumb = new ImageView(this);
 		LayoutParams lp = new LayoutParams();
@@ -372,7 +378,7 @@ public class ShareArtworkActivity extends PMActivity implements
 		}
 
 		showBitmaps.add(showBitmap);
-		
+
 		return showBitmap;
 	}
 
@@ -416,7 +422,7 @@ public class ShareArtworkActivity extends PMActivity implements
 				return null;
 			}
 		}
-		
+
 		showBitmaps.add(showBitmap);
 
 		return showBitmap;
@@ -452,10 +458,20 @@ public class ShareArtworkActivity extends PMActivity implements
 			if (showBitmaps.size() == 0) {
 				dismissDialog();
 				if (resp.result() instanceof UploadImageResult) {
-					UploadImageResult result = (UploadImageResult) resp.result();
+					UploadImageResult result = (UploadImageResult) resp
+							.result();
 					if (!result.UploadImageResult.hasError()) {
 						showDialog(getString(R.string.app_name),
-								getString(R.string.msg_upload_success), null);
+								getString(R.string.msg_upload_success), new DialogInterface.OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										Intent data = new Intent();
+										data.putExtra("share", share);
+										setResult(RESULT_OK, data);
+										finish();
+									}
+								});
 						return;
 					} else {
 						showDialog(getString(R.string.app_name),
