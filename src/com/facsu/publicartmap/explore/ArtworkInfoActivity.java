@@ -153,9 +153,11 @@ public class ArtworkInfoActivity extends PMActivity implements
 		oks.setImageUrl(imgUrl);
 		oks.setUrl("http://www.alllan.com");
 		oks.setVenueName(getString(R.string.app_name));
-		oks.setLatitude((float) location.latitude);
-		oks.setLongitude((float) location.longitude);
-		oks.setAddress(location.address);
+		if (location != null) {
+          oks.setLatitude((float) location.latitude);
+		  oks.setLongitude((float) location.longitude);
+		  oks.setAddress(location.address);
+		}
 		oks.setSilent(silent);
 		if (platform != null) {
 			oks.setPlatform(platform);
