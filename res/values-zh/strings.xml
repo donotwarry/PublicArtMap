@@ -1,80 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ePublicArt Map</string>
-    <string name="msg_loading">Loading，please wait...</string>
-    <string name="msg_failed">Failed</string>
-    <string name="msg_submiting">Submiting，please wait...</string>
+    <string name="app_name">公共艺术地图</string>
+    <string name="msg_loading">正在加载中，请稍候</string>
+    <string name="msg_failed">失败</string>
+    <string name="msg_submiting">正在提交，请稍候</string>
 
     <!-- explore -->
-    <string name="title_explore">ePublicArt Map</string>
-    <string name="msg_locating">Locating...</string>
-    <string name="lab_dis2u">Distance from your current location</string>
-    <string name="lab_m">m</string>
-    <string name="lab_km">km</string>
-    <string name="lab_10km">10km</string>
-    <string name="title_share">Share</string>
-    <string name="share_tips_1">Please read </string>
-    <string name="share_tips_2">the following terms and conditions before using the ePublicart Map</string>
-    <string name="share_tips_3">，and agreen them.</string>
-    <string name="text_agreen">Agreen</string>
-    <string name="text_reject">Reject</string>
-    <string name="pop_author">Author：</string>
+    <string name="title_explore">公共艺术地图</string>
+    <string name="msg_locating">正在定位中...</string>
+    <string name="lab_dis2u">距离您现在的位置</string>
+    <string name="lab_m">米</string>
+    <string name="lab_km">公里</string>
+    <string name="lab_10km">万公里</string>
+    <string name="title_share">分享</string>
+    <string name="share_tips_1">请阅读</string>
+    <string name="share_tips_2">＃用户服务协议＃</string>
+    <string name="share_tips_3">，遵守相关约定</string>
+    <string name="text_agreen">同意</string>
+    <string name="text_reject">不同意</string>
+    <string name="pop_author">作者：</string>
     <string name="shareing">作品还在等待审核，请稍后再试</string>
     
     <!-- share artwork -->
-    <string name="my_share">My Share</string>
+    <string name="my_share">我的分享</string>
 
     <!-- artworkinfo -->
-    <string name="artwork_name">Artwork：</string>
-    <string name="artwork_author">Artist：</string>
-    <string name="artwork_time">Date：</string>
-    <string name="artwork_intro">Intro：</string>
-    <string name="artwork_take_photo">Take Photo</string>
-    <string name="artwork_pick_photo">Pick Photo</string>
+    <string name="artwork_name">作品名称：</string>
+    <string name="artwork_author">艺术家：</string>
+    <string name="artwork_time">时间：</string>
+    <string name="artwork_intro">作品介绍：</string>
+    <string name="artwork_take_photo">手机拍照</string>
+    <string name="artwork_pick_photo">手机相册</string>
     <string name="msg_have_no_sdcard">您手机里没有内存卡，无法上传照片</string>
     <string name="msg_take_photo_first">请先拍摄照片再进行分享！</string>
     <string name="msg_oom">内存不足，无法显示照片</string>
-    <string name="msg_vote_success">Vote success！Thank you！</string>
-    <string name="msg_vote_failed">Vote failed</string>
-    <string name="msg_share_text">I found a public art work, like to share with everyone~</string>
-    <string name="msg_upload_success">Share success！</string>
+    <string name="msg_vote_success">投票成功！感谢您对该作品的支持！</string>
+    <string name="msg_vote_failed">投票失败</string>
+    <string name="msg_share_text">我发现了一个公共艺术作品，特别棒，分享给大家～</string>
+    <string name="msg_upload_success">分享成功！</string>
 
     <!-- comment -->
-    <string name="title_comment">Comment</string>
-    <string name="msg_loading_comment">Loading，please wait...</string>
+    <string name="title_comment">作品评论</string>
+    <string name="msg_loading_comment">正在加载中，请稍候...</string>
     <string name="msg_empty_comment">暂无评论！</string>
     <string name="msg_failed_comment">读取评论失败</string>
     <string name="msg_add_comment_success">评论发表成功！请耐心等待审核！</string>
 
     <!-- barcode -->
-    <string name="title_barcode">Scan</string>
-    <string name="msg_not_found">Not found product info！</string>
+    <string name="title_barcode">扫一扫</string>
+    <string name="msg_not_found">没有找到作品信息！</string>
 
     <!-- me -->
-    <string name="title_me">About us</string>
-    <string name="section_login">My Account</string>
-    <string name="section_bind">Share setting</string>
-    <string name="section_info">Product info</string>
-    <string name="menu_weibo_login">Binding Sina Weibo</string>
-    <string name="menu_txweibo_login">Binding Tencent Weibo</string>
-    <string name="menu_qq_login">Binding QQ</string>
-    <string name="menu_login">Login</string>
-    <string name="menu_feedback">Feedback</string>
-    <string name="menu_update">Check for Updates</string>
-    <string name="menu_about">About</string>
-    <string name="btn_logout">Logout</string>
-    <string name="btn_cancel_share">Cancel share</string>
-    <string name="msg_logout">logouting...</string>
+    <string name="title_me">关于我们</string>
+    <string name="section_login">个人帐户</string>
+    <string name="section_bind">分享设置</string>
+    <string name="section_info">产品信息</string>
+    <string name="menu_weibo_login">绑定新浪微博</string>
+    <string name="menu_txweibo_login">绑定腾讯微博</string>
+    <string name="menu_qq_login">绑定QQ账户</string>
+    <string name="menu_login">点击登录</string>
+    <string name="menu_feedback">用户反馈</string>
+    <string name="menu_update">检查更新</string>
+    <string name="menu_about">关于</string>
+    <string name="btn_logout">登出</string>
+    <string name="btn_cancel_share">取消分享</string>
+    <string name="msg_logout">正在登出...</string>
 
     <!-- login -->
     <string name="hint_username">用户名/邮箱地址/手机号</string>
-    <string name="hint_password">Password</string>
-    <string name="hint_password_re">Password confirm</string>
-    <string name="login_sinaweibo">Login Sina Weibo</string>
-    <string name="login_qqweibo">Login Tencent Weibo</string>
-    <string name="login_qq">Login QQ</string>
-    <string name="msg_logining">Logining，please wait...</string>
+    <string name="hint_password">密码</string>
+    <string name="hint_password_re">密码确认</string>
+    <string name="login_sinaweibo">新浪微博登录</string>
+    <string name="login_qqweibo">腾讯微博登录</string>
+    <string name="login_qq">QQ登录</string>
+    <string name="msg_logining">正在登录，请稍候...</string>
     <string name="msg_username_not_null">用户名不能为空.</string>
     <string name="msg_password_not_null">密码不能为空.</string>
     <string name="msg_password_not_same">密码不一致</string>
@@ -90,7 +90,7 @@
     <string name="auth_complete">授权成功，正在跳转登录操作…</string>
     <string name="if_register_needed">如果您需要注册功能…</string>
     <string name="after_auth">一般来说第三方登录时，第三方平台已经为您完成用户身份校验，您可以放心让用户登录。\n\n但如果您需要判断用户是否为新用户，可以在授权操作完成后，将用户的信息通过字段“HashMap userInfo”携带给login方法。客户端通过“String userId”执行登录请求，如果服务端判定此userId为未注册用户，可以将userInfo发送给注册接口，获取用户在此平台上的昵称、头像等数据，然后执行注册</string>
-    <string name="ok">Confirm</string>
+    <string name="ok">确定</string>
 
     <!-- umeng -->
     <string name="update_checking">正在检查更新...</string>

@@ -57,7 +57,8 @@ public class PopupView extends LinearLayout {
 		if (TextUtils.isEmpty(artist)) {
 			author.setVisibility(View.GONE);
 		} else {
-			author.setText(getString(R.string.pop_author) + data.Artist);
+			author.setText(getString(R.string.pop_author)
+					+ TextPicker.pick(getContext(), data.Artist));
 			author.setVisibility(View.VISIBLE);
 		}
 	}

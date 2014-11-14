@@ -297,11 +297,13 @@ public class ExploreGMapFragment extends PMFragment implements
 				break;
 			}
 
-			LatLng target = cp.target;
-			if (curMarker.getPosition().latitude == target.latitude
-					&& curMarker.getPosition().longitude == target.longitude) {
-				return;
-			}
+//			LatLng target = cp.target;
+//			if (curMarker.getPosition().latitude == target.latitude
+//					&& curMarker.getPosition().longitude == target.longitude) {
+//				return;
+//			}
+			curMarker = null;
+			return;
 
 		} while (false);
 
